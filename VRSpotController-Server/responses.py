@@ -4,5 +4,9 @@ class Response:
     success : bool = True
     message : str = ""
 
+    def __init__(self, success : bool = True, message : str = ""):
+        self.success = success
+        self.message = message
+
     def str(self):
         return json.dumps(self.__dict__)

@@ -10,6 +10,7 @@ using Ping = System.Net.NetworkInformation.Ping;
 
 public class SpotServer
 {
+    private const int TIMEOUT = 4000;
     public async void IsAvaiable()
     {
         try
@@ -30,13 +31,44 @@ public class SpotServer
         try
         {
             Debug.Log("Say Hello");
+
+            var req = new HelloRequest("Unity Client");
+            var resp = await SendRequest<Response>(End.HELLO, Methode.POST, req);
             
-            var req = new UnityWebRequest(Config.loaded.serverAddress+End.HELLO);
-            req.method = "POST";
-            req.timeout = 4000;
+            Debug.Log(resp.message);
+        }
+        catch (Exception e)
+        {
+            Debug.LogException(e);
+        }
+    }
+
+    public async void Move(Vector2 move)
+    {
+        try
+        {
+            var req = new MoveRequest(move);
+            var resp = await SendRequest<Response>(End.MOVE, Methode.POST, req);
+            
+            if(!resp.success)throw new Exception(resp.message);
+        }
+        catch (Exception e)
+        {
+            Debug.LogException(e);
+        }
+    }
+
+    public async Task<Response> SendRequest<T>(string end, string methode, Request request) where T : Response
+    {
+        try
+        {
+            string address = Config.loaded.serverAddress + end;
+            var req = new UnityWebRequest(address);
+            req.method = methode;
+            req.timeout = TIMEOUT;
             req.downloadHandler = new DownloadHandlerBuffer();
 
-            string json = new HelloRequest("Unity Client").ToString();
+            string json = request.ToString();
             byte[] data = Encoding.UTF8.GetBytes(json);
             req.uploadHandler = new UploadHandlerRaw(data);
             req.uploadHandler.contentType = "application/json";
@@ -48,20 +80,30 @@ public class SpotServer
                 throw new Exception(req.error);
             }
             
-            Debug.Log("Got resp:"+req.downloadHandler.text);
             json = req.downloadHandler.text;
-            Response resp = JsonUtility.FromJson<Response>(json);
+            T resp = JsonUtility.FromJson<T>(json);
 
             if (!resp.success)
             {
                 throw new Exception(resp.message);
             }
             
-            Debug.Log(resp.message);
+            return resp;
         }
         catch (Exception e)
         {
             Debug.LogException(e);
+            return new Response()
+            {
+                success = false,
+                message = e.Message
+            };
         }
     }
+}
+
+public class Methode
+{
+    public const string POST = "POST";
+    public const string GET = "GET";
 }

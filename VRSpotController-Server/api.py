@@ -12,12 +12,16 @@ def home():
 
 @app.route(END.HELLO, methods=['POST'])
 def hello():
-    print("Got hello request!")
+    print("Got hello request:"+str(request.json))
     data = HelloRequest(**request.json)
-    resp = Response()
-    resp.success = True
-    resp.message = f"Hello, {data.name}!"
+    resp = Response(True, f"Hello, {data.name}")
     print("Sending response:"+resp.message)
+    return resp.str()
+
+@app.route(END.MOVE, methods=['POST'])
+def move():
+    data = MoveRequest(**request.json)
+    resp = Response(True, f"Moving to {data.move.x}, {data.move.y}!")
     return resp.str()
 
 printHostName()
