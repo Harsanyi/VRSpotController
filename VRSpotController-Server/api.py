@@ -1,24 +1,26 @@
 from flask import Flask, request
-from datetime import datetime
-from models import User
+from requests import *
+from functions import *
+from responses import Response
+from ends import END
 
 app = Flask(__name__)
 
-@app.route('/')
+@app.route(END.HOME)
 def home():
     return 'Server is running!'
 
-@app.route('/time')
-def getTime():
-    now = datetime.now()
-    print(now)
-    return str(now)
-
-@app.route('/hello', methods=['POST'])
+@app.route(END.HELLO, methods=['POST'])
 def hello():
-    data = User(**request.json)
-    print(data.name)
-    return data.name
+    print("Got hello request!")
+    data = HelloRequest(**request.json)
+    resp = Response()
+    resp.success = True
+    resp.message = f"Hello, {data.name}!"
+    print("Sending response:"+resp.message)
+    return resp.str()
 
-app.run(host="127.0.0.1", port=5000)
+printHostName()
+app.run(host="127.0.0.1", port=5000, debug=True)
+
 

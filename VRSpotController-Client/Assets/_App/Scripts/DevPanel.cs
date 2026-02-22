@@ -10,8 +10,18 @@ public class DevPanel : MonoBehaviour
         }
     }
 
+    public void DeleteConfig()
+    {
+        Config.Delete();
+    }
+
     public void ServerCheck()
     {
         new SpotServer().IsAvaiable();
+    }
+
+    public void SayHello()
+    {
+        new SpotServer().SayHello();
     }
 }
