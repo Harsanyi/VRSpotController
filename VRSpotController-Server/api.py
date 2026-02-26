@@ -3,6 +3,7 @@ from requests import *
 from functions import *
 from responses import Response
 from ends import END
+from spot import *
 
 app = Flask(__name__)
 
