@@ -2,6 +2,7 @@ import argparse
 import os
 import sys
 import time
+from bosdyn.api import image_pb2
 
 import bosdyn.client
 import bosdyn.client.lease
@@ -38,8 +39,8 @@ from vector2 import vector2
 from bosdyn.api import robot_state_pb2
 
 class Spot:
-    #SPOT_IP = "192.168.137:30"
     SPOT_IP = "***REMOVED***"
+    #SPOT_IP = "***REMOVED***"
     USERNAME = "***REMOVED***"
     PASSWORD = "***REMOVED***"
 
@@ -97,29 +98,51 @@ class Spot:
 
         state_client = self.robot.ensure_client(RobotStateClient.default_service_name)
         state = state_client.get_robot_state()
-        battery = state.battery_states[0]
-        power_state = state.power_state.motor_power_state
+        print(state)
+        return state
 
-        print("Battery %:", battery.charge_percentage.value)
-        print("Voltage:", battery.voltage.value)
-        print("Motor power state:", power_state)
+    @staticmethod
+    def GetBattery(state):
+        return state.battery_states[0].charge_percentage.value
+    
+    @staticmethod
+    def GetTransform(state):
+        snapshot = state.kinematic_state.transforms_snapshot
+        return snapshot.child_to_parent_edge_map["vision"].parent_tform_child
 
-    def GetImages(self):
-        image_client = self.robot.ensure_client(ImageClient.default_service_name)
+    @staticmethod
+    def GetRotation(state):
+        return Spot.GetTransform(state).rotation
+        
+    @staticmethod
+    def GetPosition(state):
+        return Spot.GetTransform(state).position
 
-        source = "frontleft_fisheye_image"
-        image_responses = image_client.get_image_from_sources([source])
-        image = image_responses[0]
+    def GetImages(self, source:list[str]):
+        self.GetRobot()
+        client = self.robot.ensure_client(ImageClient.default_service_name)
+        image_responses = client.get_image_from_sources(source)
 
-        img = image.shot.image
+        images:list = []
+        for resp in image_responses:
+            img = resp.shot.image
+            images.append(img)
 
+        print(f"Found {len(images)} images!")
+        return images
+    
+    def ListCameras(self):
+        self.GetRobot()
+        client = self.robot.ensure_client(ImageClient.default_service_name)
+        sources = client.list_image_sources()
+        return [str(source.name) for source in sources]
+
+    @staticmethod
+    def SaveImage(img, path):
         if img.format == image_pb2.Image.FORMAT_JPEG:
-            with open("spot_image.jpg", "wb") as f:
+            with open(path, "wb") as f:
                 f.write(img.data)
-            print("Kép elmentve: spot_image.jpg")
-
-        else:
-            print("Nem JPEG formátum érkezett.")
+            print(f"Image Saved: {path}")
 
     def GetCommandClient(self):
         self.GetLeaseAlive()
@@ -158,8 +181,6 @@ class Spot:
         )
 
         duration = delta.Magnitude() / speed
-        print(duration)
-        #endTime = duration + 2
         try:
             cmd_cl.robot_command(cmd, end_time_secs=time.time()+duration)
             print("Spot Move")
@@ -175,8 +196,7 @@ class Spot:
             cmd_cl.robot_command(stopCmd)
             print("Stop")
         except Exception as e:
-            print(f"Előre mozgás hiba: {e}")
-            # Leállítjuk vész esetén is
+            print(f"Move error: {e}")
             try:
                 stop_cmd = RobotCommandBuilder.synchro_velocity_command(v_x=0.0, v_y=0.0, v_rot=0.0)
                 cmd_cl.robot_command(stop_cmd)
@@ -184,37 +204,20 @@ class Spot:
                 pass
             return False
         
-    def PrintFaults(self):
-        self.GetRobot()
-        state_client = self.robot.ensure_client(RobotStateClient.default_service_name)
-        state = state_client.get_robot_state()
-        
-        print("\n=== Robot State Debug ===")
-        print("Teljes state dir():")
-        print(dir(state))  # mutatja az összes elérhető mezőt
-        
-        print("\nPower state:")
-        print(state.power_state)
-        
-        print("\nKinematic state van-e?")
-        if hasattr(state, 'kinematic_state'):
-            print(state.kinematic_state)
-        
-        print("\nBehavior faults (ha van):")
-        if hasattr(state, 'behavior_faults'):
-            for bf in state.behavior_faults:
-                print(f"  - {bf}")
-        else:
-            print("Nincs behavior_faults mező")
-        
-        print("\nSystem faults keresése alternatív módon:")
-        # Néha a faults más helyen van, pl. kinematic_state-ben vagy külön service-ben
-        if hasattr(state, 'system_faults'):
-            print(state.system_faults)
-        else:
-            print("Nincs system_faults sem")
-        
-        print("=========================")
+class ImgSource:
+    BACK = "back_fisheye_image"
+    FRONT_LEFT = "frontleft_fisheye_image"
+    FRONT_RIGHT = "frontright_fisheye_image"
+    LEFT = "left_fisheye_image"
+    RIGHT = "right_fisheye_image"
+
+    ROTATION_ANGLE = {
+        BACK: 0,
+        FRONT_LEFT: -78,
+        FRONT_RIGHT: -102,
+        LEFT: 0,
+        RIGHT: 180
+    }
 
 
     

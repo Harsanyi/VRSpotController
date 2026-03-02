@@ -1,6 +1,6 @@
 from flask import Flask, request
 from requests import *
-from functions import *
+from server import *
 from responses import Response
 from ends import END
 from spot import *
@@ -13,19 +13,15 @@ def home():
 
 @app.route(END.HELLO, methods=['POST'])
 def hello():
-    print("Got hello request:"+str(request.json))
-    data = HelloRequest(**request.json)
-    resp = Response(True, f"Hello, {data.name}")
-    print("Sending response:"+resp.message)
-    return resp.str()
+    req = HelloRequest(**request.json)
+    return server.hello(req).str()
 
 @app.route(END.MOVE, methods=['POST'])
 def move():
-    data = MoveRequest(**request.json)
-    resp = Response(True, f"Moving to {data.move.x}, {data.move.y}!")
-    return resp.str()
+    req = MoveRequest(**request.json)
+    return server.move(req).str()
 
-printHostName()
+server.printHostName()
 app.run(host="127.0.0.1", port=5000, debug=True)
 
 
