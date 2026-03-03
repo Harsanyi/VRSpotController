@@ -100,6 +100,24 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Stand"",
+                    ""type"": ""Button"",
+                    ""id"": ""bafaff4c-ccba-4c2c-a8fc-ce370a065e9d"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Power"",
+                    ""type"": ""Button"",
+                    ""id"": ""11a472d4-4d72-4772-9932-e15cff842fe4"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -168,6 +186,61 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""57d8b4c1-5405-44ca-85c0-ded3f8bf932a"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""55d5f2a0-d466-49c8-a19e-03a9057c8cb8"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Stand"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""66c30c40-fcfa-4f17-8a27-01f37571bb2e"",
+                    ""path"": ""<XRController>{LeftHand}/{PrimaryButton}"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Stand"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2e7a9f32-7720-41cc-820e-a1ec73b269a7"",
+                    ""path"": ""<Keyboard>/p"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Power"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""03d11ed7-1705-47f6-af82-8605fd62fa03"",
+                    ""path"": ""<XRController>{LeftHand}/{SecondaryButton}"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Power"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -177,6 +250,8 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
         // Controll
         m_Controll = asset.FindActionMap("Controll", throwIfNotFound: true);
         m_Controll_Move = m_Controll.FindAction("Move", throwIfNotFound: true);
+        m_Controll_Stand = m_Controll.FindAction("Stand", throwIfNotFound: true);
+        m_Controll_Power = m_Controll.FindAction("Power", throwIfNotFound: true);
     }
 
     ~@UserInput()
@@ -258,6 +333,8 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Controll;
     private List<IControllActions> m_ControllActionsCallbackInterfaces = new List<IControllActions>();
     private readonly InputAction m_Controll_Move;
+    private readonly InputAction m_Controll_Stand;
+    private readonly InputAction m_Controll_Power;
     /// <summary>
     /// Provides access to input actions defined in input action map "Controll".
     /// </summary>
@@ -273,6 +350,14 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Controll/Move".
         /// </summary>
         public InputAction @Move => m_Wrapper.m_Controll_Move;
+        /// <summary>
+        /// Provides access to the underlying input action "Controll/Stand".
+        /// </summary>
+        public InputAction @Stand => m_Wrapper.m_Controll_Stand;
+        /// <summary>
+        /// Provides access to the underlying input action "Controll/Power".
+        /// </summary>
+        public InputAction @Power => m_Wrapper.m_Controll_Power;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -302,6 +387,12 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
             @Move.started += instance.OnMove;
             @Move.performed += instance.OnMove;
             @Move.canceled += instance.OnMove;
+            @Stand.started += instance.OnStand;
+            @Stand.performed += instance.OnStand;
+            @Stand.canceled += instance.OnStand;
+            @Power.started += instance.OnPower;
+            @Power.performed += instance.OnPower;
+            @Power.canceled += instance.OnPower;
         }
 
         /// <summary>
@@ -316,6 +407,12 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
             @Move.started -= instance.OnMove;
             @Move.performed -= instance.OnMove;
             @Move.canceled -= instance.OnMove;
+            @Stand.started -= instance.OnStand;
+            @Stand.performed -= instance.OnStand;
+            @Stand.canceled -= instance.OnStand;
+            @Power.started -= instance.OnPower;
+            @Power.performed -= instance.OnPower;
+            @Power.canceled -= instance.OnPower;
         }
 
         /// <summary>
@@ -363,5 +460,19 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnMove(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Stand" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnStand(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Power" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnPower(InputAction.CallbackContext context);
     }
 }

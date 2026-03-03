@@ -7,6 +7,8 @@ from spot import *
 
 app = Flask(__name__)
 
+server = Server()
+
 @app.route(END.HOME)
 def home():
     return 'Server is running!'
@@ -20,6 +22,16 @@ def hello():
 def move():
     req = MoveRequest(**request.json)
     return server.move(req).str()
+
+@app.route(END.STAND, methods=["POST"])
+def stand():
+    req = StandRequest(**request.json)
+    return server.stand(req).str()
+
+@app.route(END.POWER, methods=["POST"])
+def powerOn():
+    req = PowerOnRequest(**request.json)
+    return server.powerOn(req).str()
 
 server.printHostName()
 app.run(host="127.0.0.1", port=5000, debug=True)

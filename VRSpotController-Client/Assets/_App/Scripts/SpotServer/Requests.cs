@@ -27,3 +27,23 @@ public class MoveRequest : Request
         this.move = move;
     }
 }
+
+public class StandRequest : Request
+{
+    public bool stand = false;
+
+    public StandRequest(bool stand)
+    {
+        this.stand = stand;
+    }
+}
+
+public class PowerOnRequest : Request
+{
+    public bool powerOn = false;
+
+    public PowerOnRequest(bool powerOn)
+    {
+        this.powerOn = powerOn;
+    }
+}

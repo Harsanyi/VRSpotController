@@ -86,12 +86,16 @@ class Spot:
         
         self.GetLease()
         self.lease_alive = LeaseKeepAlive(self.lease_cl, return_at_exit=True)
+        print("Get Lease Alive.")
 
     def DropLease(self):
         if self.lease_alive == None:
             return
         
         self.lease_alive.shutdown()
+        self.lease_alive = None
+        self.lease = None
+        print("Drop Lease.")
 
     def GetState(self):
         self.GetRobot()
@@ -150,23 +154,13 @@ class Spot:
 
     def StandUp(self):
         cmd = self.GetCommandClient()
-        try:
-            blocking_stand(cmd, timeout_sec=self.timeout)
-            print("Spot Standing.")
-            return True
-        except Exception as e:
-            print(f"Spot failed to stand:{e}")
-            return False
+        blocking_stand(cmd, timeout_sec=self.timeout)
+        print("Spot Standing.")
 
     def SitDown(self):
         cmd = self.GetCommandClient()
-        try:
-            blocking_sit(cmd, timeout_sec=self.timeout)
-            print("Spot Sitting.")
-            return True
-        except Exception as e:
-            print(f"Spot failed to sit:{e}")
-            return False
+        blocking_sit(cmd, timeout_sec=self.timeout)
+        print("Spot Sitting.")
         
     def Move(self, delta:vector2, speed):
         self.GetLeaseAlive()

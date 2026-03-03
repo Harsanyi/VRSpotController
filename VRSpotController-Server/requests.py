@@ -11,3 +11,15 @@ class MoveRequest:
 
     def __init__(self, move):
         self.move = vector2(move['x'], move['y'])
+
+class StandRequest:
+    stand : bool
+
+    def __init__(self, stand:bool):
+        self.stand = stand
+
+class PowerOnRequest:
+    powerOn : bool
+
+    def __init__(self, powerOn:bool):
+        self.powerOn = powerOn

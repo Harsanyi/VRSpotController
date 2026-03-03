@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using TreeEditor;
 using UnityEngine;
 using UnityEngine.Networking;
 using Debug = UnityEngine.Debug;
@@ -11,6 +12,10 @@ using Ping = System.Net.NetworkInformation.Ping;
 public class SpotServer
 {
     private const int TIMEOUT = 4000;
+
+    public bool isStanding { get; private set; } = false;
+    public bool isPoweredOn { get; private set; } = false;
+
     public async void IsAvaiable()
     {
         try
@@ -47,7 +52,7 @@ public class SpotServer
     {
         try
         {
-            var req = new MoveRequest(move);
+            var req = new MoveRequest(new Vector2(move.y, -move.x));
             var resp = await SendRequest<Response>(End.MOVE, Methode.POST, req);
             
             if(!resp.success)throw new Exception(resp.message);
@@ -55,6 +60,40 @@ public class SpotServer
         catch (Exception e)
         {
             Debug.LogException(e);
+        }
+    }
+    
+    public async void SetStanding(bool standing)
+    {
+        Debug.Log("Set Standing:"+standing.ToString());
+        var req = new StandRequest(standing);
+        var resp = await SendRequest<Response>(End.STAND, Methode.POST, req);
+
+        if (resp.success)
+        {
+            isStanding = standing;
+            Debug.Log(resp.message);
+        }
+        else
+        {
+            Debug.LogError(resp.message);
+        }
+    }
+
+    public async void SetPowerOn(bool powerOn)
+    {
+        Debug.Log("Set Power On:"+powerOn.ToString());
+        var req = new PowerOnRequest(powerOn);
+        var resp = await SendRequest<Response>(End.POWER, Methode.POST, req);
+        
+        if (resp.success)
+        {
+            Debug.Log(resp.message);
+            isPoweredOn = powerOn;
+        }
+        else
+        {
+            Debug.LogError(resp.message);
         }
     }
 
