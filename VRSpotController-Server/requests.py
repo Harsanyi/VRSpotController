@@ -23,3 +23,9 @@ class PowerOnRequest:
 
     def __init__(self, powerOn:bool):
         self.powerOn = powerOn
+
+class ImageRequest:
+    source : str
+
+    def __init__(self, source:str):
+        self.source = source

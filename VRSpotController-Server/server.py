@@ -43,4 +43,24 @@ class Server:
         except Exception as e:
             resp = Response(False, f"Error:{e}")
         return resp
+    
+    def getImage(self, req:ImageRequest):
+        print(f"Got image request {req.source}")
+        try:
+            imgs = self.spot.GetImages([req.source])
+            return imgs[0].data
+        except Exception as e:
+            print(e)
+            return None
+    
+    def getImages(self):
+        try:
+            imgs = self.spot.GetImages(ImgSource.ALL)
+            imgDatas : ImageData = []
+            for i in range(0,len(imgs)):
+                data = ImageData(imgs[i].data,f"{ImgSource.ALL[i]}.jpg")
+                imgDatas.append(data)
+        
+        except Exception as e:
+            print(e)
 

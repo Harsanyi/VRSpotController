@@ -10,3 +10,11 @@ class Response:
 
     def str(self):
         return json.dumps(self.__dict__)
+    
+class ImageData:
+    data : bytes
+    name : str
+
+    def __init__(self, data:bytes, name:str):
+        self.data = data
+        self.name = name

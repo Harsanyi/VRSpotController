@@ -204,6 +204,9 @@ class ImgSource:
     FRONT_RIGHT = "frontright_fisheye_image"
     LEFT = "left_fisheye_image"
     RIGHT = "right_fisheye_image"
+    HAND = "hand_color_image"
+
+    ALL = [BACK,FRONT_LEFT,FRONT_RIGHT,LEFT,RIGHT,HAND]
 
     ROTATION_ANGLE = {
         BACK: 0,

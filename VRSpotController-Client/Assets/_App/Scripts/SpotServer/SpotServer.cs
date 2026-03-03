@@ -8,13 +8,20 @@ using UnityEngine;
 using UnityEngine.Networking;
 using Debug = UnityEngine.Debug;
 using Ping = System.Net.NetworkInformation.Ping;
+using UnityEngine.Events;
 
 public class SpotServer
 {
     private const int TIMEOUT = 4000;
+    private const int IMAGE_UPDATE_FREQUENCY = 1;
+    private const int IMAGE_UPDATE_MS = (int)(1f/IMAGE_UPDATE_FREQUENCY*1000);
 
     public bool isStanding { get; private set; } = false;
     public bool isPoweredOn { get; private set; } = false;
+    
+    public UnityEvent<Texture2D> onImageUpdated = new UnityEvent<Texture2D>();
+    
+    private bool updateImages = false;
 
     public async void IsAvaiable()
     {
@@ -139,10 +146,84 @@ public class SpotServer
             };
         }
     }
+
+    public async void StartUpdateingImages()
+    {
+        updateImages = true;
+        Stopwatch watch = new Stopwatch();
+        while (Application.isPlaying && updateImages)
+        {
+            Debug.Log("Try update image!");
+            watch.Restart();
+            await GetImages();
+            int remains = (int)(watch.ElapsedMilliseconds - IMAGE_UPDATE_MS);
+            if (remains > 0) await Task.Delay(remains);
+        }
+    }
+
+    public async void StopUpdateingImages()
+    {
+        updateImages = false;
+    }
+
+    private async Task GetImages()
+    {
+        var req = new ImageRequest(ImageSource.FRONT_LEFT);
+        var resp = await SendImageRequest(End.IMAGE, Methode.POST, req);
+        Debug.Log("Got Response. maybe...");
+        onImageUpdated.Invoke(resp);
+    }
+
+    public async Task<Texture2D> SendImageRequest(string end, string methode, ImageRequest request)
+    {
+        try
+        {
+            string address = Config.loaded.serverAddress + end;
+            var req = new UnityWebRequest(address);
+            req.method = methode;
+            req.timeout = TIMEOUT;
+            req.downloadHandler = new DownloadHandlerBuffer();
+
+            string json = request.ToString();
+            byte[] data = Encoding.UTF8.GetBytes(json);
+            req.uploadHandler = new UploadHandlerRaw(data);
+            req.uploadHandler.contentType = "application/json";
+
+            await req.SendWebRequest();
+
+            if (req.result != UnityWebRequest.Result.Success)
+            {
+                throw new Exception(req.error);
+            }
+
+            Texture2D tex = new Texture2D(1, 1);
+            tex.LoadImage(req.downloadHandler.data);
+            tex.name = request.source + ".jpg";
+            tex.Apply();
+            
+            Debug.Log($"Got texture {tex.name}");
+            return tex;
+        }
+        catch (Exception e)
+        {
+            Debug.LogException(e);
+            return null;
+        }
+    }
 }
 
 public class Methode
 {
     public const string POST = "POST";
     public const string GET = "GET";
+}
+
+public class ImageSource
+{
+    public const string BACK = "back_fisheye_image";
+    public const string FRONT_LEFT = "frontleft_fisheye_image";
+    public const string FRONT_RIGHT = "frontright_fisheye_image";
+    public const string LEFT = "left_fisheye_image";
+    public const string RIGHT = "right_fisheye_image";
+    public const string HAND = "hand_color_image";
 }

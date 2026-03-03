@@ -7,4 +7,5 @@ public static class End
     public const string MOVE = "/move";
     public const string STAND = "/stand";
     public const string POWER = "/power";
+    public const string IMAGE = "/image";
 }

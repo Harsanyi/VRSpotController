@@ -47,3 +47,13 @@ public class PowerOnRequest : Request
         this.powerOn = powerOn;
     }
 }
+
+public class ImageRequest : Request
+{
+    public string source;
+
+    public ImageRequest(string source)
+    {
+        this.source = source;
+    }
+}

@@ -1,15 +1,17 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.XR;
+using UnityEngine.UI;
 
 public class UserControll : MonoBehaviour
 {
     private const int SENDING_FREQUENCY = 10;
-    private const int SENDING_MS = 1 /  SENDING_FREQUENCY * 1000;
+    private const int SENDING_MS = (int)(1f /  SENDING_FREQUENCY * 1000);
     
     private UserInput input;
     private SpotServer server;
+
+    [SerializeField] private RawImage rImg;
 
     private Vector2 lastReadedVelocity = Vector2.zero;
     private Vector2 lastSendedVelocity = Vector2.zero;
@@ -24,11 +26,19 @@ public class UserControll : MonoBehaviour
         input.Controll.Power.performed += OnPowerOnPressed;
         
         server = new SpotServer();
+        server.onImageUpdated.AddListener(OnGotNewImage);
+        server.StartUpdateingImages();
     }
 
     private void Update()
     {
         HandleMovement();
+    }
+
+    void OnGotNewImage(Texture2D img)
+    {
+        if(rImg.texture != null)Destroy(rImg.texture);
+        rImg.texture = img;
     }
 
     void HandleMovement()
