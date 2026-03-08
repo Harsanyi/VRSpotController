@@ -13,16 +13,10 @@ using UnityEngine.Events;
 public class SpotServer
 {
     private const int TIMEOUT = 4000;
-    private const int IMAGE_UPDATE_FREQUENCY = 1;
-    private const int IMAGE_UPDATE_MS = (int)(1f/IMAGE_UPDATE_FREQUENCY*1000);
-
+    
     public bool isStanding { get; private set; } = false;
     public bool isPoweredOn { get; private set; } = false;
     
-    public UnityEvent<Texture2D> onImageUpdated = new UnityEvent<Texture2D>();
-    
-    private bool updateImages = false;
-
     public async void IsAvaiable()
     {
         try
@@ -146,31 +140,11 @@ public class SpotServer
             };
         }
     }
-
-    public async void StartUpdateingImages()
+    
+    public async Task<Texture2D> GetImage(string source)
     {
-        updateImages = true;
-        Stopwatch watch = new Stopwatch();
-        while (Application.isPlaying && updateImages)
-        {
-            Debug.Log("Try update image!");
-            watch.Restart();
-            await GetImages();
-            int remains = (int)(IMAGE_UPDATE_MS-watch.ElapsedMilliseconds);
-            if (remains > 0) await Task.Delay(remains);
-        }
-    }
-
-    public async void StopUpdateingImages()
-    {
-        updateImages = false;
-    }
-
-    private async Task GetImages()
-    {
-        var req = new ImageRequest(ImageSource.FRONT_LEFT);
-        var resp = await SendImageRequest(End.IMAGE, Methode.POST, req);
-        onImageUpdated.Invoke(resp);
+        var req = new ImageRequest(source);
+        return await SendImageRequest(End.IMAGE, Methode.POST, req);
     }
 
     public async Task<Texture2D> SendImageRequest(string end, string methode, ImageRequest request)
