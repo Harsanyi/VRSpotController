@@ -7,7 +7,7 @@ from spot import *
 
 app = Flask(__name__)
 
-server = Server()
+server = Server(True)
 
 @app.route(END.HOME)
 async def home():
