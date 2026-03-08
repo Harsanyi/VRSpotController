@@ -17,19 +17,19 @@ class Server:
 
     def loadDebugImage(self,name:str):
         try:
-            with open(name, "rb") as f:
+            with open(name+".jpg", "rb") as f:
                 Server.debugImages[name] = f.read()
                 print(f"Loaded debug image: {name}")
         except Exception as e:
             print(f"Error loading debug image {name}: {e}")
 
     def loadDebugImages(self):
-        self.loadDebugImage("back_fisheye_image.jpg")
-        self.loadDebugImage("frontleft_fisheye_image.jpg")
-        self.loadDebugImage("frontright_fisheye_image.jpg")
-        self.loadDebugImage("left_fisheye_image.jpg")
-        self.loadDebugImage("right_fisheye_image.jpg")
-        self.loadDebugImage("hand_color_image.jpg")
+        self.loadDebugImage("back_fisheye_image")
+        self.loadDebugImage("frontleft_fisheye_image")
+        self.loadDebugImage("frontright_fisheye_image")
+        self.loadDebugImage("left_fisheye_image")
+        self.loadDebugImage("right_fisheye_image")
+        self.loadDebugImage("hand_color_image")
 
     def printHostName(self):
         hostname = socket.gethostname()

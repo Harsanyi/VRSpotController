@@ -156,7 +156,7 @@ public class SpotServer
             Debug.Log("Try update image!");
             watch.Restart();
             await GetImages();
-            int remains = (int)(watch.ElapsedMilliseconds - IMAGE_UPDATE_MS);
+            int remains = (int)(IMAGE_UPDATE_MS-watch.ElapsedMilliseconds);
             if (remains > 0) await Task.Delay(remains);
         }
     }
@@ -170,7 +170,6 @@ public class SpotServer
     {
         var req = new ImageRequest(ImageSource.FRONT_LEFT);
         var resp = await SendImageRequest(End.IMAGE, Methode.POST, req);
-        Debug.Log("Got Response. maybe...");
         onImageUpdated.Invoke(resp);
     }
 
