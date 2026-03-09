@@ -111,8 +111,13 @@ class Spot:
         state.posX = pos.x
         state.posY = pos.y
         state.posZ = pos.z
+
+        rot = Spot.GetRotation(baseState)
+        state.rotX = rot.x
+        state.rotY = rot.y
+        state.rotZ = rot.z
+        state.rotW = rot.w
         
-        #state.rotation = Spot.GetRotation(baseState)
         return state
 
     def GetBaseState(self):
