@@ -1,4 +1,4 @@
 class SpotState:
-    IsPowered : bool = False
-    IsStanding : bool = False
+    powerState : int = False
+    poseState : int = False
     battery : float = -1.

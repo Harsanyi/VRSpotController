@@ -38,6 +38,7 @@ import time
 from vector2 import vector2
 from bosdyn.api import robot_state_pb2
 from spotState import *
+from bosdyn.api import power_pb2
 
 class Spot:
     SPOT_IP = "***REMOVED***"
@@ -103,8 +104,8 @@ class Spot:
 
         state : SpotState = SpotState()
         state.battery = Spot.GetBattery(baseState)
-        state.IsStanding = True
-        state.IsPowered = True
+        state.poseState = Spot.GetPoseState(baseState)
+        state.powerState = Spot.GetPowerState(baseState)
 
         return state
 
@@ -120,8 +121,13 @@ class Spot:
         return state.battery_states[0].charge_percentage.value
     
     @staticmethod
-    def GetPoweredOn(state):
+    def GetPowerState(state):
         return state.power_state.motor_power_state
+    
+    @staticmethod
+    def GetPoseState(state):
+        print(state)
+        return state.behavior_state.state
     
     @staticmethod
     def GetTransform(state):
