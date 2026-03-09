@@ -123,7 +123,16 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
                     ""name"": ""Yaw"",
                     ""type"": ""Value"",
                     ""id"": ""48560b9a-2d42-4d0c-8bec-16de565d2f27"",
-                    ""expectedControlType"": """",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Pitch"",
+                    ""type"": ""Value"",
+                    ""id"": ""75972cb9-b808-44bd-a207-3e0db02f14bf"",
+                    ""expectedControlType"": ""Axis"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
@@ -283,6 +292,39 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
                     ""action"": ""Yaw"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""e1a4aaeb-9e1b-4fc9-a07e-83d3583454c4"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pitch"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""09849916-81f8-4b66-b738-2b818ee5def9"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pitch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""800c7cb5-6952-464f-93cc-af122ffdcc3d"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pitch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -295,6 +337,7 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
         m_Controll_Stand = m_Controll.FindAction("Stand", throwIfNotFound: true);
         m_Controll_Power = m_Controll.FindAction("Power", throwIfNotFound: true);
         m_Controll_Yaw = m_Controll.FindAction("Yaw", throwIfNotFound: true);
+        m_Controll_Pitch = m_Controll.FindAction("Pitch", throwIfNotFound: true);
     }
 
     ~@UserInput()
@@ -379,6 +422,7 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_Controll_Stand;
     private readonly InputAction m_Controll_Power;
     private readonly InputAction m_Controll_Yaw;
+    private readonly InputAction m_Controll_Pitch;
     /// <summary>
     /// Provides access to input actions defined in input action map "Controll".
     /// </summary>
@@ -406,6 +450,10 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Controll/Yaw".
         /// </summary>
         public InputAction @Yaw => m_Wrapper.m_Controll_Yaw;
+        /// <summary>
+        /// Provides access to the underlying input action "Controll/Pitch".
+        /// </summary>
+        public InputAction @Pitch => m_Wrapper.m_Controll_Pitch;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -444,6 +492,9 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
             @Yaw.started += instance.OnYaw;
             @Yaw.performed += instance.OnYaw;
             @Yaw.canceled += instance.OnYaw;
+            @Pitch.started += instance.OnPitch;
+            @Pitch.performed += instance.OnPitch;
+            @Pitch.canceled += instance.OnPitch;
         }
 
         /// <summary>
@@ -467,6 +518,9 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
             @Yaw.started -= instance.OnYaw;
             @Yaw.performed -= instance.OnYaw;
             @Yaw.canceled -= instance.OnYaw;
+            @Pitch.started -= instance.OnPitch;
+            @Pitch.performed -= instance.OnPitch;
+            @Pitch.canceled -= instance.OnPitch;
         }
 
         /// <summary>
@@ -535,5 +589,12 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnYaw(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Pitch" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnPitch(InputAction.CallbackContext context);
     }
 }

@@ -9,6 +9,7 @@ public class Spot : MonoBehaviour
 {
     private const int MOVE_UPDATE_FREQUENCY = 10;
     private const int IMAGE_UPDATE_FREQUENCY = 10;
+    private const int PITCH_UPDATE_FREQUENCY = 10;
     private const int IMAGE_ANGLE_RESOLUTION = 10;
     private const float CAM_DISTANCE = 500;
     private const int STATE_UPDATE_FREQUENCY = 10;
@@ -20,6 +21,7 @@ public class Spot : MonoBehaviour
     private SpotServer server;
     private Vector2 move;
     private float yaw;
+    private float pitch;
     private SpotState state;
 
     private void Awake()
@@ -32,6 +34,7 @@ public class Spot : MonoBehaviour
     {
         server = new SpotServer();
         StartCoroutine(MoveRoutine());
+        StartCoroutine(PitchRoutine());
 
         //img is 640x480
         float fovH = 72f;
@@ -65,6 +68,11 @@ public class Spot : MonoBehaviour
         yaw = val;
     }
 
+    public void Pitch(float val)
+    {
+        pitch = val;
+    }
+
     IEnumerator MoveRoutine()
     {
         Vector2 lastMove = default;
@@ -78,6 +86,26 @@ public class Spot : MonoBehaviour
             {
                 server.Move(move, yaw);
                 lastMove = move;
+                lastYaw = yaw;
+            }
+
+            long remaningMs = SEND_MS - watch.ElapsedMilliseconds;
+            if(remaningMs > 0)yield return new WaitForSeconds(remaningMs / 1000f);
+        }
+    }
+
+    IEnumerator PitchRoutine()
+    {
+        float lastPitch = 0;
+        Stopwatch watch = Stopwatch.StartNew();
+        const int SEND_MS = 1000 / PITCH_UPDATE_FREQUENCY;
+        while (Application.isPlaying)
+        {
+            watch.Restart();
+            if (pitch != lastPitch)
+            {
+                server.Pitch(pitch);
+                lastPitch = pitch;
             }
 
             long remaningMs = SEND_MS - watch.ElapsedMilliseconds;

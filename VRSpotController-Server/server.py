@@ -53,14 +53,14 @@ class Server:
             resp = Response(False, f"Error:{e}")
         return resp
     
-    def yaw(self, req:YawRequest):
+    def pitch(self, req:PitchRequest):
         if self.debug:
-            resp = Response(True, f"Rotate to {req.value}!")
+            resp = Response(True, f"Pitch to {req.pitch}!")
             return resp
 
         try:
-            self.spot.Yaw(req.value,1)
-            resp = Response(True, f"Rotate to {req.value}!")
+            self.spot.Pitch(req.pitch)
+            resp = Response(True, f"Pitch to {req.pitch}!")
         except Exception as e:
             resp = Response(False, f"Error:{e}")
         return resp

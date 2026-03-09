@@ -19,6 +19,7 @@ public class UserControll : MonoBehaviour
     private void Update()
     {
         HandleMovement();
+        HandlePitch();
     }
     
     void HandleMovement()
@@ -27,6 +28,12 @@ public class UserControll : MonoBehaviour
         Spot.instance.Move(dir);
         var yaw = input.Controll.Yaw.ReadValue<float>();
         Spot.instance.Yaw(yaw);
+    }
+
+    void HandlePitch()
+    {
+        var pitch = input.Controll.Pitch.ReadValue<float>();
+        Spot.instance.Pitch(pitch);
     }
 
     void OnStandPressed(InputAction.CallbackContext context)

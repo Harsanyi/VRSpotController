@@ -36,6 +36,11 @@ async def move():
     req = MoveRequest(**request.json)
     return server.move(req).str()
 
+@app.route(END.PITCH, methods=["POST"])
+async def pitch():
+    req = PitchRequest(**request.json)
+    return server.pitch(req).str()
+
 @app.route(END.STAND, methods=["POST"])
 async def stand():
     req = StandRequest(**request.json)

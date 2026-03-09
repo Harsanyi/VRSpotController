@@ -9,4 +9,5 @@ public static class End
     public const string POWER = "/power";
     public const string IMAGE = "/image";
     public const string STATE = "/state";
+    public const string PITCH = "/pitch";
 }

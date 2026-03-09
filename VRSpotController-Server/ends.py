@@ -7,3 +7,4 @@ class END:
     IMAGE = "/image"
     IMAGES = "/images"
     STATE = "/state"
+    PITCH = "/pitch"

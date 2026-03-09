@@ -39,6 +39,7 @@ from vector2 import vector2
 from bosdyn.api import robot_state_pb2
 from spotState import *
 from bosdyn.api import power_pb2
+from bosdyn.geometry import EulerZXY
 
 class Spot:
     SPOT_IP = "***REMOVED***"
@@ -224,6 +225,32 @@ class Spot:
             except:
                 pass
             return False
+        
+    def Pitch(self, pitch:float):
+        self.GetLeaseAlive()
+
+        rot = EulerZXY(
+            yaw=0.,
+            roll=0.,
+            pitch=pitch
+        )
+
+        cmd_cl = self.GetCommandClient()
+        cmd = RobotCommandBuilder.synchro_stand_command(
+            footprint_R_body=rot
+        )
+
+        try:
+            cmd_cl.robot_command(cmd)
+        except Exception as e:
+            print(f"Pitch error: {e}")
+            try:
+                stop_cmd = RobotCommandBuilder.synchro_stand_command(footprint_R_body=EulerZXY(0.,0.,0.))
+                cmd_cl.robot_command(stop_cmd)
+            except:
+                pass
+            return False
+
         
 class ImgSource:
     BACK = "back_fisheye_image"

@@ -64,6 +64,21 @@ public class SpotServer
         }
     }
     
+    public async void Pitch(float pitch)
+    {
+        try
+        {
+            var req = new PitchRequest(pitch);
+            var resp = await SendRequest<Response>(End.PITCH, Methode.POST, req);
+            
+            if(!resp.success)throw new Exception(resp.message);
+        }
+        catch (Exception e)
+        {
+            Debug.LogException(e);
+        }
+    }
+    
     public async void SetStanding(bool standing)
     {
         Debug.Log("Set Standing:"+standing.ToString());

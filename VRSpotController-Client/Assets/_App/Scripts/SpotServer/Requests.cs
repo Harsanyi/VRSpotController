@@ -30,6 +30,16 @@ public class MoveRequest : Request
     }
 }
 
+public class PitchRequest : Request
+{
+    public float pitch;
+
+    public PitchRequest(float pitch)
+    {
+        this.pitch = pitch;
+    }
+}
+
 public class StandRequest : Request
 {
     public bool stand = false;

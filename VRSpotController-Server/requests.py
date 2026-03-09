@@ -14,6 +14,12 @@ class MoveRequest:
         self.move = vector2(move['x'], move['y'])
         self.yaw = yaw
 
+class PitchRequest:
+    pitch : float
+
+    def __init__(self, pitch):
+        self.pitch = pitch
+
 class YawRequest:
     value : float
     
