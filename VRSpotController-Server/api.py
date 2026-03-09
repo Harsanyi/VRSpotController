@@ -4,10 +4,13 @@ from server import *
 from responses import Response
 from ends import END
 from spot import *
+import logging
 
 app = Flask(__name__)
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
 
-server = Server(True)
+server = Server(False)
 
 @app.route(END.HOME)
 async def home():
@@ -36,7 +39,6 @@ async def powerOn():
 @app.route(END.IMAGE, methods=["POST"])
 async def getImage():
     req = ImageRequest(**request.json)
-    print(f"Img request {req.source}")
     img = server.getImage(req)
     if(img == None):
         return Response(False,"Image not got!").str()
@@ -47,9 +49,9 @@ async def getImage():
         'Content-Disposition', 'attachment', filename=f'{req.source}.jpg')
     return resp
 
-@app.route(END.IMAGES, methods=["GET"])
-async def getImages():
-    return server.getImages()
+@app.route(END.STATE, methods=["POST"])
+async def getState():
+    return server.getState().str()
 
 server.printHostName()
 app.run(host="127.0.0.1", port=5000, debug=True)

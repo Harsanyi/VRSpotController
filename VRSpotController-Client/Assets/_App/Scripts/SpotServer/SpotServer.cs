@@ -174,7 +174,6 @@ public class SpotServer
             tex.name = request.source + ".jpg";
             tex.Apply();
             
-            Debug.Log($"Got texture {tex.name}");
             return tex;
         }
         catch (Exception e)
@@ -183,12 +182,18 @@ public class SpotServer
             return null;
         }
     }
+
+    public async Task<SpotState> GetState()
+    {
+        var req = new Request();
+        var resp = await SendRequest<StateResponse>(End.STATE, Methode.POST, req) as StateResponse;
+        return resp.state;
+    }
 }
 
 public class Methode
 {
     public const string POST = "POST";
-    public const string GET = "GET";
 }
 
 public class ImageSource

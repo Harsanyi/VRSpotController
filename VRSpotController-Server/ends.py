@@ -6,3 +6,4 @@ class END:
     POWER = "/power"
     IMAGE = "/image"
     IMAGES = "/images"
+    STATE = "/state"

@@ -2,6 +2,7 @@ import socket
 from requests import *
 from responses import *
 from spot import *
+from spotState import *
 
 class Server:
     spot : Spot = None
@@ -82,8 +83,6 @@ class Server:
         return resp
     
     def getImage(self, req:ImageRequest):
-        print(f"Got image request {req.source}")
-
         if self.debug:
             if req.source in Server.debugImages:
                 return Server.debugImages[req.source]
@@ -98,14 +97,13 @@ class Server:
             print(e)
             return None
     
-    def getImages(self):
+    def getState(self):
+        resp : StateResponse = StateResponse()
         try:
-            imgs = self.spot.GetImages(ImgSource.ALL)
-            imgDatas : ImageData = []
-            for i in range(0,len(imgs)):
-                data = ImageData(imgs[i].data,f"{ImgSource.ALL[i]}.jpg")
-                imgDatas.append(data)
-        
+            state = self.spot.GetState()
+            resp.state = state.__dict__
         except Exception as e:
             print(e)
+        finally:
+            return resp
 

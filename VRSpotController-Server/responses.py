@@ -1,4 +1,5 @@
 import json
+from spotState import *
 
 class Response:
     success : bool = True
@@ -18,3 +19,9 @@ class ImageData:
     def __init__(self, data:bytes, name:str):
         self.data = data
         self.name = name
+
+class ImageResponse:
+    images : ImageData
+
+class StateResponse(Response):
+    state : SpotState

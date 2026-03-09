@@ -37,6 +37,7 @@ from bosdyn.util import seconds_to_duration
 import time
 from vector2 import vector2
 from bosdyn.api import robot_state_pb2
+from spotState import *
 
 class Spot:
     SPOT_IP = "***REMOVED***"
@@ -97,17 +98,30 @@ class Spot:
         self.lease = None
         print("Drop Lease.")
 
-    def GetState(self):
+    def GetState(self) -> SpotState:
+        baseState = self.GetBaseState()
+
+        state : SpotState = SpotState()
+        state.battery = Spot.GetBattery(baseState)
+        state.IsStanding = True
+        state.IsPowered = True
+
+        return state
+
+    def GetBaseState(self):
         self.GetRobot()
 
         state_client = self.robot.ensure_client(RobotStateClient.default_service_name)
         state = state_client.get_robot_state()
-        print(state)
         return state
 
     @staticmethod
-    def GetBattery(state):
+    def GetBattery(state) -> float:
         return state.battery_states[0].charge_percentage.value
+    
+    @staticmethod
+    def GetPoweredOn(state):
+        return state.power_state.motor_power_state
     
     @staticmethod
     def GetTransform(state):
@@ -132,7 +146,6 @@ class Spot:
             img = resp.shot.image
             images.append(img)
 
-        print(f"Found {len(images)} images!")
         return images
     
     def ListCameras(self):
@@ -177,7 +190,6 @@ class Spot:
         duration = delta.Magnitude() / speed
         try:
             cmd_cl.robot_command(cmd, end_time_secs=time.time()+duration)
-            print("Spot Move")
             time.sleep(duration)
 
             stopCmd = RobotCommandBuilder.synchro_velocity_command(
@@ -188,7 +200,6 @@ class Spot:
                 locomotion_hint=spot_command_pb2.HINT_AUTO
             )
             cmd_cl.robot_command(stopCmd)
-            print("Stop")
         except Exception as e:
             print(f"Move error: {e}")
             try:

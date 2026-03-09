@@ -8,9 +8,10 @@ using Debug = UnityEngine.Debug;
 public class Spot : MonoBehaviour
 {
     private const int MOVE_UPDATE_FREQUENCY = 10;
-    private const int IMAGE_UPDATE_FREQUENCY = 1;
+    private const int IMAGE_UPDATE_FREQUENCY = 10;
     private const int IMAGE_ANGLE_RESOLUTION = 10;
-    private const float CAM_DISTANCE = 1000;
+    private const float CAM_DISTANCE = 500;
+    private const int STATE_UPDATE_FREQUENCY = 10;
     
     public static Spot instance { get; private set; } = null;
 
@@ -18,6 +19,7 @@ public class Spot : MonoBehaviour
     
     private SpotServer server;
     private Vector2 move;
+    private SpotState state;
 
     private void Awake()
     {
@@ -39,6 +41,7 @@ public class Spot : MonoBehaviour
         StartCoroutine(ImageUpdateRoutine(ImageSource.RIGHT, Quaternion.Euler(0,180f-72f,0), fov));
         StartCoroutine(ImageUpdateRoutine(ImageSource.FRONT_LEFT, Quaternion.Euler(0, 72*0.5f, -0), fov));
         StartCoroutine(ImageUpdateRoutine(ImageSource.FRONT_RIGHT, Quaternion.Euler(0, -72*0.5f, -0), fov));
+        StartCoroutine(StateUpdateRoutine());
     }
     
     public void Stand()
@@ -103,11 +106,32 @@ public class Spot : MonoBehaviour
             
             if(imageTexture != null)Destroy(imageTexture);
             imageTexture = task.Result;
-            Debug.Log($"Got Image:{source} w:{imageTexture.width} h:{imageTexture.height}");
             mat.SetTexture("_BaseMap", imageTexture);
             
             long remainingMs = SEND_MS - watch.ElapsedMilliseconds;
             if(remainingMs > 0)yield return new WaitForSeconds(remainingMs / 1000f);
+        }
+    }
+
+    IEnumerator StateUpdateRoutine()
+    {
+        int updateTime = 1000 / STATE_UPDATE_FREQUENCY;
+        Stopwatch watch = new Stopwatch();
+        while (Application.isPlaying)
+        {
+            watch.Restart();
+
+            var task = server.GetState();
+            while (!task.IsCompleted)
+            {
+                yield return null;
+            }
+            
+            state = task.Result;
+            Debug.Log(state);
+
+            long remains = updateTime - watch.ElapsedMilliseconds;
+            if (remains > 0) yield return new WaitForSeconds(remains / 1000f);
         }
     }
 }

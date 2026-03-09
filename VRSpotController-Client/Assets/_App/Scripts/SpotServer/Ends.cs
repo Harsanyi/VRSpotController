@@ -8,4 +8,5 @@ public static class End
     public const string STAND = "/stand";
     public const string POWER = "/power";
     public const string IMAGE = "/image";
+    public const string STATE = "/state";
 }
