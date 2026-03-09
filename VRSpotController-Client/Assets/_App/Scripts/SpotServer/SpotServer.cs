@@ -49,11 +49,11 @@ public class SpotServer
         }
     }
 
-    public async void Move(Vector2 move)
+    public async void Move(Vector2 move, float yaw)
     {
         try
         {
-            var req = new MoveRequest(new Vector2(move.y, -move.x));
+            var req = new MoveRequest(new Vector2(move.y, -move.x), -yaw);
             var resp = await SendRequest<Response>(End.MOVE, Methode.POST, req);
             
             if(!resp.success)throw new Exception(resp.message);

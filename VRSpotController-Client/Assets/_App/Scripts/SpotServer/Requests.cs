@@ -21,10 +21,12 @@ public class HelloRequest : Request
 public class MoveRequest : Request
 {
     public Vector2 move;
+    public float yaw;
 
-    public MoveRequest(Vector2 move)
+    public MoveRequest(Vector2 move, float yaw)
     {
         this.move = move;
+        this.yaw = yaw;
     }
 }
 

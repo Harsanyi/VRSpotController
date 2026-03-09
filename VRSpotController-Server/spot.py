@@ -117,7 +117,7 @@ class Spot:
         state.rotY = rot.y
         state.rotZ = rot.z
         state.rotW = rot.w
-        
+
         return state
 
     def GetBaseState(self):
@@ -191,19 +191,19 @@ class Spot:
         blocking_sit(cmd, timeout_sec=self.timeout)
         print("Spot Sitting.")
         
-    def Move(self, delta:vector2, speed):
+    def Move(self, delta:vector2, yaw:float, speed:float):
         self.GetLeaseAlive()
 
         cmd_cl = self.GetCommandClient()
         cmd = RobotCommandBuilder.synchro_velocity_command(
             v_x=delta.x,
             v_y=delta.y,
-            v_rot=0,
+            v_rot=yaw,
             params=None,
             locomotion_hint=spot_command_pb2.HINT_AUTO
         )
 
-        duration = delta.Magnitude() / speed
+        duration = delta.Magnitude() / speed + abs(yaw) / speed
         try:
             cmd_cl.robot_command(cmd, end_time_secs=time.time()+duration)
             time.sleep(duration)

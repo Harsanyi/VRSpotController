@@ -25,6 +25,8 @@ public class UserControll : MonoBehaviour
     {
         var dir = input.Controll.Move.ReadValue<Vector2>();
         Spot.instance.Move(dir);
+        var yaw = input.Controll.Yaw.ReadValue<float>();
+        Spot.instance.Yaw(yaw);
     }
 
     void OnStandPressed(InputAction.CallbackContext context)

@@ -19,6 +19,7 @@ public class Spot : MonoBehaviour
     
     private SpotServer server;
     private Vector2 move;
+    private float yaw;
     private SpotState state;
 
     private void Awake()
@@ -59,18 +60,24 @@ public class Spot : MonoBehaviour
         move = dir;
     }
 
+    public void Yaw(float val)
+    {
+        yaw = val;
+    }
+
     IEnumerator MoveRoutine()
     {
-        Vector2 lastSended = default;
+        Vector2 lastMove = default;
+        float lastYaw = 0;
         Stopwatch watch = Stopwatch.StartNew();
         const int SEND_MS = 1000 / MOVE_UPDATE_FREQUENCY;
         while (Application.isPlaying)
         {
             watch.Restart();
-            if (move != lastSended)
+            if (move != lastMove || yaw != lastYaw)
             {
-                server.Move(move);
-                lastSended = move;
+                server.Move(move, yaw);
+                lastMove = move;
             }
 
             long remaningMs = SEND_MS - watch.ElapsedMilliseconds;

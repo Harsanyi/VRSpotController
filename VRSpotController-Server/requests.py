@@ -8,9 +8,17 @@ class HelloRequest:
 
 class MoveRequest:
     move : vector2
+    yaw : float
 
-    def __init__(self, move):
+    def __init__(self, move, yaw):
         self.move = vector2(move['x'], move['y'])
+        self.yaw = yaw
+
+class YawRequest:
+    value : float
+    
+    def __init__(self, value):
+        self.value = value
 
 class StandRequest:
     stand : bool

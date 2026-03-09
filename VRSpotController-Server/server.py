@@ -47,8 +47,20 @@ class Server:
             return resp
 
         try:
-            self.spot.Move(req.move,1)
+            self.spot.Move(req.move,req.yaw,1)
             resp = Response(True, f"Moving to {req.move.x}, {req.move.y}!")
+        except Exception as e:
+            resp = Response(False, f"Error:{e}")
+        return resp
+    
+    def yaw(self, req:YawRequest):
+        if self.debug:
+            resp = Response(True, f"Rotate to {req.value}!")
+            return resp
+
+        try:
+            self.spot.Yaw(req.value,1)
+            resp = Response(True, f"Rotate to {req.value}!")
         except Exception as e:
             resp = Response(False, f"Error:{e}")
         return resp
