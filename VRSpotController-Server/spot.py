@@ -106,7 +106,13 @@ class Spot:
         state.battery = Spot.GetBattery(baseState)
         state.poseState = Spot.GetPoseState(baseState)
         state.powerState = Spot.GetPowerState(baseState)
-
+        
+        pos = Spot.GetPosition(baseState)
+        state.posX = pos.x
+        state.posY = pos.y
+        state.posZ = pos.z
+        
+        #state.rotation = Spot.GetRotation(baseState)
         return state
 
     def GetBaseState(self):
@@ -126,7 +132,6 @@ class Spot:
     
     @staticmethod
     def GetPoseState(state):
-        print(state)
         return state.behavior_state.state
     
     @staticmethod

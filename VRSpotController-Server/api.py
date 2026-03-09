@@ -5,12 +5,22 @@ from responses import Response
 from ends import END
 from spot import *
 import logging
+from flask.json.provider import DefaultJSONProvider
+from dataclasses import is_dataclass, asdict
 
 app = Flask(__name__)
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
 
 server = Server(False)
+
+class JSONProvider(DefaultJSONProvider):
+    def default(self,obj):
+        if is_dataclass(obj):
+            return asdict(obj)
+        return super().default(obj)
+    
+app.json_provider_class = JSONProvider
 
 @app.route(END.HOME)
 async def home():
