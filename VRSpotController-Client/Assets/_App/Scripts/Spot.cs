@@ -25,6 +25,7 @@ public class Spot : MonoBehaviour
     private float pitch;
     private SpotState state;
     private float grip;
+    private Vector3 armPos;
 
     private void Awake()
     {
@@ -47,8 +48,10 @@ public class Spot : MonoBehaviour
         StartCoroutine(ImageUpdateRoutine(ImageSource.RIGHT, Quaternion.Euler(0,180f-72f,0), fov));
         StartCoroutine(ImageUpdateRoutine(ImageSource.FRONT_LEFT, Quaternion.Euler(0, 72*0.5f, -0), fov));
         StartCoroutine(ImageUpdateRoutine(ImageSource.FRONT_RIGHT, Quaternion.Euler(0, -72*0.5f, -0), fov));
+        StartCoroutine(ImageUpdateRoutine(ImageSource.HAND, Quaternion.identity, fov));
         StartCoroutine(StateUpdateRoutine());
         StartCoroutine(GripRoutine());
+        StartCoroutine(ArmPosRoutine());
     }
     
     public void Stand()
@@ -81,6 +84,11 @@ public class Spot : MonoBehaviour
         grip = val;
     }
 
+    public void ArmPos(Vector3 pos)
+    {
+        armPos = pos;
+    }
+
     IEnumerator MoveRoutine()
     {
         Vector2 lastMove = default;
@@ -95,6 +103,25 @@ public class Spot : MonoBehaviour
                 server.Move(move, yaw);
                 lastMove = move;
                 lastYaw = yaw;
+            }
+
+            long remaningMs = SEND_MS - watch.ElapsedMilliseconds;
+            if(remaningMs > 0)yield return new WaitForSeconds(remaningMs / 1000f);
+        }
+    }
+
+    IEnumerator ArmPosRoutine()
+    {
+        Vector3 lastPos = default;
+        Stopwatch watch = Stopwatch.StartNew();
+        const int SEND_MS = 1000 / MOVE_UPDATE_FREQUENCY;
+        while (Application.isPlaying)
+        {
+            watch.Restart();
+            if (armPos != lastPos)
+            {
+                server.ArmPos(armPos);
+                lastPos = armPos;
             }
 
             long remaningMs = SEND_MS - watch.ElapsedMilliseconds;

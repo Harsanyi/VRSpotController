@@ -11,4 +11,5 @@ public static class End
     public const string STATE = "/state";
     public const string PITCH = "/pitch";
     public const string GRIP = "/grip";
+    public const string ARM = "/arm";
 }

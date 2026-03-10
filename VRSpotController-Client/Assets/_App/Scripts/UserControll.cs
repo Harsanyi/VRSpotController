@@ -22,8 +22,15 @@ public class UserControll : MonoBehaviour
         HandleMovement();
         HandlePitch();
         HandleGrip();
+        HandleArm();
     }
-    
+
+    void HandleArm()
+    {
+        var pos = input.Controll.ArmPos.ReadValue<Vector3>();
+        Spot.instance.ArmPos(pos);
+    }
+
     void HandleMovement()
     {
         var dir = input.Controll.Move.ReadValue<Vector2>();

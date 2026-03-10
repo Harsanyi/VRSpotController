@@ -9,3 +9,10 @@ class SpotState:
     rotY : float
     rotZ : float
     rotW : float
+    armPosX : float
+    armPosY : float
+    armPosZ : float
+    armRotX : float
+    armRotY : float
+    armRotZ : float
+    armRotW : float

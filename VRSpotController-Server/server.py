@@ -109,7 +109,7 @@ class Server:
         except Exception as e:
             print(e)
             return None
-    
+            
     def getState(self):
         resp : StateResponse = StateResponse()
         try:
@@ -127,4 +127,12 @@ class Server:
         except Exception as e:
             print(e)
             return Response(False, "Grip failed to set.")
+        
+    def setArm(self, req:ArmRequest):
+        try:
+            self.spot.SetArm(vector3(req.posX, req.posY, req.posZ),vector4(req.rotX, req.rotY, req.rotZ, req.rotW))
+            return Response(True, f"Arm setted to location.")
+        except Exception as e:
+            print(e)
+            return Response(False, e)
 

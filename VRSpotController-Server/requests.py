@@ -1,4 +1,4 @@
-from vector2 import vector2
+from vector import *
 
 class HelloRequest:
     name : str
@@ -49,3 +49,21 @@ class GripRequest:
 
     def __init__(self, open:float):
         self.open = open
+
+class ArmRequest:
+    posX : float
+    posY : float
+    posZ : float
+    rotX : float
+    rotY : float
+    rotZ : float
+    rotW : float
+
+    def __init__(self, posX:float, posY:float, posZ:float, rotX:float, rotY:float, rotZ:float, rotW:float):
+        self.posX = posX
+        self.posY = posY
+        self.posZ = posZ
+        self.rotX = rotX
+        self.rotY = rotY
+        self.rotZ = rotZ
+        self.rotW = rotW

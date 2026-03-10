@@ -73,6 +73,11 @@ async def setGrip():
     req = GripRequest(**request.json)
     return server.setGrip(req).str()
 
+@app.route(END.ARM, methods=["POST"])
+async def setArm():
+    req = ArmRequest(**request.json)
+    return server.setArm(req).str()
+
 server.printHostName()
 app.run(host="127.0.0.1", port=5000, debug=True)
 

@@ -30,6 +30,29 @@ public class MoveRequest : Request
     }
 }
 
+public class ArmRequest : Request
+{
+    public float posX;
+    public float posY;
+    public float posZ;
+    
+    public float rotX;
+    public float rotY;
+    public float rotZ;
+    public float rotW;
+
+    public ArmRequest(float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW)
+    {
+        this.posX = posX;
+        this.posY = posY;
+        this.posZ = posZ;
+        this.rotX = rotX;
+        this.rotY = rotY;
+        this.rotZ = rotZ;
+        this.rotW = rotW;
+    }
+}
+
 public class PitchRequest : Request
 {
     public float pitch;

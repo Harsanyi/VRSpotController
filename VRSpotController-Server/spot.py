@@ -17,6 +17,8 @@ from bosdyn.client.robot_command import RobotCommandBuilder, RobotCommandClient,
 from bosdyn.client.robot_state import RobotStateClient
 from bosdyn.util import seconds_to_duration
 from bosdyn.client.util import authenticate
+from bosdyn.api.spot import robot_command_pb2 as spot_command_pb2
+from bosdyn.client.robot_command import RobotCommandBuilder
 
 import bosdyn.client
 from bosdyn.client.image import ImageClient
@@ -35,11 +37,17 @@ from bosdyn.client.power import PowerClient, power_on_motors
 from bosdyn.client.robot_command import RobotCommandBuilder
 from bosdyn.util import seconds_to_duration
 import time
-from vector2 import vector2
+from vector import *
 from bosdyn.api import robot_state_pb2
 from spotState import *
 from bosdyn.api import power_pb2
 from bosdyn.geometry import EulerZXY
+from bosdyn.client.frame_helpers import (
+    GRAV_ALIGNED_BODY_FRAME_NAME,
+    ODOM_FRAME_NAME,
+    VISION_FRAME_NAME,
+    get_a_tform_b
+)
 
 class Spot:
     SPOT_IP = "***REMOVED***"
@@ -119,6 +127,15 @@ class Spot:
         state.rotZ = rot.z
         state.rotW = rot.w
 
+        armT = Spot.GetArmTransform(baseState)
+        state.armPosX = armT.position.x
+        state.armPosY = armT.position.y
+        state.armPosZ = armT.position.z
+        state.armRotW = armT.rotation.w
+        state.armRotX = armT.rotation.x
+        state.armRotY = armT.rotation.y
+        state.armRotZ = armT.rotation.z
+
         return state
 
     def GetBaseState(self):
@@ -127,6 +144,11 @@ class Spot:
         state_client = self.robot.ensure_client(RobotStateClient.default_service_name)
         state = state_client.get_robot_state()
         return state
+    
+    @staticmethod
+    def GetArmTransform(state):
+        tforms = state.kinematic_state.transforms_snapshot
+        return get_a_tform_b(tforms, GRAV_ALIGNED_BODY_FRAME_NAME, "hand").to_proto()
 
     @staticmethod
     def GetBattery(state) -> float:
@@ -261,7 +283,26 @@ class Spot:
         except Exception as e:
             print(f"Pitch error: {e}")
 
+    def SetArm(self, pos:vector3, rot:vector4):
+        cmd_cl = self.GetCommandClient()
         
+        if pos.x == 0 and pos.y == 0 and pos.y == 0:
+            return cmd_cl.robot_command(RobotCommandBuilder.arm_stow_command())
+
+        frame_map = {
+            "body": GRAV_ALIGNED_BODY_FRAME_NAME,
+            "odom": ODOM_FRAME_NAME,
+            "vision": VISION_FRAME_NAME
+         }
+        frame_name = frame_map.get("body", GRAV_ALIGNED_BODY_FRAME_NAME)
+        cmd = RobotCommandBuilder.arm_pose_command(pos.x, pos.y, pos.z, rot.w, rot.x, rot.y, rot.z, frame_name, 0.5)
+
+        try:
+            cmd_cl.robot_command(cmd)
+        except Exception as e:
+            print(e)
+            cmd_cl.robot_command(RobotCommandBuilder.arm_stow_command())
+
 class ImgSource:
     BACK = "back_fisheye_image"
     FRONT_LEFT = "frontleft_fisheye_image"

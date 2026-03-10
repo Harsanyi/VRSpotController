@@ -64,6 +64,22 @@ public class SpotServer
         }
     }
     
+    public async void ArmPos(Vector3 pos)
+    {
+        try
+        {
+            var rot = Quaternion.Euler(0, 0, pos.x < 0 ? 90 : 0);
+            var req = new ArmRequest(pos.z, -pos.x, pos.y, -rot.z, rot.x, -rot.y, rot.w);
+            var resp = await SendRequest<Response>(End.ARM, Methode.POST, req);
+            
+            if(!resp.success)throw new Exception(resp.message);
+        }
+        catch (Exception e)
+        {
+            Debug.LogException(e);
+        }
+    }
+    
     public async void Pitch(float pitch)
     {
         try

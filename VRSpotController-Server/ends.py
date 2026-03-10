@@ -9,3 +9,4 @@ class END:
     STATE = "/state"
     PITCH = "/pitch"
     GRIP = "/grip"
+    ARM = "/arm"
