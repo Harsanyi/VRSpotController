@@ -247,9 +247,19 @@ class Spot:
             try:
                 stop_cmd = RobotCommandBuilder.synchro_stand_command(footprint_R_body=EulerZXY(0.,0.,0.))
                 cmd_cl.robot_command(stop_cmd)
-            except:
-                pass
+            except Exception as e:
+                print(e)
             return False
+
+    def SetGripper(self,open:float):
+        open = max(0,min(open,1.))
+        cmd_cl = self.GetCommandClient()
+        cmd = RobotCommandBuilder.claw_gripper_open_fraction_command(open)
+
+        try:
+            cmd_cl.robot_command(cmd)
+        except Exception as e:
+            print(f"Pitch error: {e}")
 
         
 class ImgSource:

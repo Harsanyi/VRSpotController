@@ -1,4 +1,5 @@
 using System;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -20,6 +21,7 @@ public class UserControll : MonoBehaviour
     {
         HandleMovement();
         HandlePitch();
+        HandleGrip();
     }
     
     void HandleMovement()
@@ -34,6 +36,13 @@ public class UserControll : MonoBehaviour
     {
         var pitch = input.Controll.Pitch.ReadValue<float>();
         Spot.instance.Pitch(pitch);
+    }
+
+    void HandleGrip()
+    {
+        var grip = input.Controll.Grip.ReadValue<float>();
+        grip = math.clamp(grip, 0f, 1f);
+        Spot.instance.Grip(grip);
     }
 
     void OnStandPressed(InputAction.CallbackContext context)

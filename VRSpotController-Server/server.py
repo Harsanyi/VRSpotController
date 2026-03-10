@@ -3,6 +3,7 @@ from requests import *
 from responses import *
 from spot import *
 from spotState import *
+import math
 
 class Server:
     spot : Spot = None
@@ -118,4 +119,12 @@ class Server:
             print(e)
         finally:
             return resp
+        
+    def setGrip(self, req:GripRequest):
+        try:
+            self.spot.SetGripper(req.open)
+            return Response(True, f"Grip set to {req.open}")
+        except Exception as e:
+            print(e)
+            return Response(False, "Grip failed to set.")
 

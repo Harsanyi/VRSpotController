@@ -40,6 +40,16 @@ public class PitchRequest : Request
     }
 }
 
+public class GripRequest : Request
+{
+    public float open;
+
+    public GripRequest(float open)
+    {
+        this.open = open;
+    }
+}
+
 public class StandRequest : Request
 {
     public bool stand = false;

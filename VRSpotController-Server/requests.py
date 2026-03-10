@@ -43,3 +43,9 @@ class ImageRequest:
 
     def __init__(self, source:str):
         self.source = source
+
+class GripRequest:
+    open : float
+
+    def __init__(self, open:float):
+        self.open = open

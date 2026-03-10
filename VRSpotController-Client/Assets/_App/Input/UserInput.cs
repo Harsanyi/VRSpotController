@@ -136,6 +136,15 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Grip"",
+                    ""type"": ""Value"",
+                    ""id"": ""e67266da-beee-4d8b-a8a4-3a538bbd034d"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -325,6 +334,39 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
                     ""action"": ""Pitch"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""61272a67-bab5-46fb-beb1-9527f300446b"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Grip"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""2e48dbec-4746-46a7-b047-33b8236f0156"",
+                    ""path"": ""<Keyboard>/g"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Grip"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""8d71a4c5-6214-4ec9-990f-7ad80a13a5dc"",
+                    ""path"": ""<Keyboard>/t"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Grip"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -338,6 +380,7 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
         m_Controll_Power = m_Controll.FindAction("Power", throwIfNotFound: true);
         m_Controll_Yaw = m_Controll.FindAction("Yaw", throwIfNotFound: true);
         m_Controll_Pitch = m_Controll.FindAction("Pitch", throwIfNotFound: true);
+        m_Controll_Grip = m_Controll.FindAction("Grip", throwIfNotFound: true);
     }
 
     ~@UserInput()
@@ -423,6 +466,7 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_Controll_Power;
     private readonly InputAction m_Controll_Yaw;
     private readonly InputAction m_Controll_Pitch;
+    private readonly InputAction m_Controll_Grip;
     /// <summary>
     /// Provides access to input actions defined in input action map "Controll".
     /// </summary>
@@ -454,6 +498,10 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Controll/Pitch".
         /// </summary>
         public InputAction @Pitch => m_Wrapper.m_Controll_Pitch;
+        /// <summary>
+        /// Provides access to the underlying input action "Controll/Grip".
+        /// </summary>
+        public InputAction @Grip => m_Wrapper.m_Controll_Grip;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -495,6 +543,9 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
             @Pitch.started += instance.OnPitch;
             @Pitch.performed += instance.OnPitch;
             @Pitch.canceled += instance.OnPitch;
+            @Grip.started += instance.OnGrip;
+            @Grip.performed += instance.OnGrip;
+            @Grip.canceled += instance.OnGrip;
         }
 
         /// <summary>
@@ -521,6 +572,9 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
             @Pitch.started -= instance.OnPitch;
             @Pitch.performed -= instance.OnPitch;
             @Pitch.canceled -= instance.OnPitch;
+            @Grip.started -= instance.OnGrip;
+            @Grip.performed -= instance.OnGrip;
+            @Grip.canceled -= instance.OnGrip;
         }
 
         /// <summary>
@@ -596,5 +650,12 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnPitch(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Grip" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnGrip(InputAction.CallbackContext context);
     }
 }

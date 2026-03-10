@@ -8,3 +8,4 @@ class END:
     IMAGES = "/images"
     STATE = "/state"
     PITCH = "/pitch"
+    GRIP = "/grip"

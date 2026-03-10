@@ -68,6 +68,11 @@ async def getImage():
 async def getState():
     return server.getState().str()
 
+@app.route(END.GRIP, methods=["POST"])
+async def setGrip():
+    req = GripRequest(**request.json)
+    return server.setGrip(req).str()
+
 server.printHostName()
 app.run(host="127.0.0.1", port=5000, debug=True)
 

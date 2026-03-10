@@ -79,6 +79,21 @@ public class SpotServer
         }
     }
     
+    public async void Grip(float grip)
+    {
+        try
+        {
+            var req = new GripRequest(grip);
+            var resp = await SendRequest<Response>(End.GRIP, Methode.POST, req);
+            
+            if(!resp.success)throw new Exception(resp.message);
+        }
+        catch (Exception e)
+        {
+            Debug.LogException(e);
+        }
+    }
+    
     public async void SetStanding(bool standing)
     {
         Debug.Log("Set Standing:"+standing.ToString());

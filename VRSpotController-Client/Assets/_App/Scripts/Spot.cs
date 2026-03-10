@@ -11,6 +11,7 @@ public class Spot : MonoBehaviour
     private const int IMAGE_UPDATE_FREQUENCY = 10;
     private const int PITCH_UPDATE_FREQUENCY = 10;
     private const int IMAGE_ANGLE_RESOLUTION = 10;
+    private const int GRIP_UPDATE_FREQUENCY = 10;
     private const float CAM_DISTANCE = 500;
     private const int STATE_UPDATE_FREQUENCY = 10;
     
@@ -23,6 +24,7 @@ public class Spot : MonoBehaviour
     private float yaw;
     private float pitch;
     private SpotState state;
+    private float grip;
 
     private void Awake()
     {
@@ -46,6 +48,7 @@ public class Spot : MonoBehaviour
         StartCoroutine(ImageUpdateRoutine(ImageSource.FRONT_LEFT, Quaternion.Euler(0, 72*0.5f, -0), fov));
         StartCoroutine(ImageUpdateRoutine(ImageSource.FRONT_RIGHT, Quaternion.Euler(0, -72*0.5f, -0), fov));
         StartCoroutine(StateUpdateRoutine());
+        StartCoroutine(GripRoutine());
     }
     
     public void Stand()
@@ -71,6 +74,11 @@ public class Spot : MonoBehaviour
     public void Pitch(float val)
     {
         pitch = val;
+    }
+
+    public void Grip(float val)
+    {
+        grip = val;
     }
 
     IEnumerator MoveRoutine()
@@ -108,6 +116,25 @@ public class Spot : MonoBehaviour
                 lastPitch = pitch;
             }
 
+            long remaningMs = SEND_MS - watch.ElapsedMilliseconds;
+            if(remaningMs > 0)yield return new WaitForSeconds(remaningMs / 1000f);
+        }
+    }
+
+    IEnumerator GripRoutine()
+    {
+        float lastGrip = 0;
+        Stopwatch watch = Stopwatch.StartNew();
+        const int SEND_MS = 1000 / GRIP_UPDATE_FREQUENCY;
+        while (Application.isPlaying)
+        {
+            watch.Restart();
+            if (grip != lastGrip)
+            {
+                server.Grip(grip);
+                lastGrip = grip;
+            }
+            
             long remaningMs = SEND_MS - watch.ElapsedMilliseconds;
             if(remaningMs > 0)yield return new WaitForSeconds(remaningMs / 1000f);
         }
