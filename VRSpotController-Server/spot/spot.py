@@ -39,7 +39,7 @@ from bosdyn.util import seconds_to_duration
 import time
 from vector import *
 from bosdyn.api import robot_state_pb2
-from spotState import *
+from spot.spotState import *
 from bosdyn.api import power_pb2
 from bosdyn.geometry import EulerZXY
 from bosdyn.client.frame_helpers import (
@@ -49,7 +49,7 @@ from bosdyn.client.frame_helpers import (
     get_a_tform_b
 )
 
-class Spot:
+class Spot():
     SPOT_IP = "***REMOVED***"
     #SPOT_IP = "***REMOVED***"
     USERNAME = "***REMOVED***"
@@ -175,17 +175,17 @@ class Spot:
     def GetPosition(state):
         return Spot.GetTransform(state).position
 
-    def GetImages(self, source:list[str]):
+    def GetImage(self, source:str):
         self.GetRobot()
         client = self.robot.ensure_client(ImageClient.default_service_name)
-        image_responses = client.get_image_from_sources(source)
+        image_responses = client.get_image_from_sources([source])
 
-        images:list = []
-        for resp in image_responses:
-            img = resp.shot.image
-            images.append(img)
-
-        return images
+        if len(image_responses) == 0:
+            print(f"No image response for source: {source}")
+            return None
+        
+        resp = image_responses[0]
+        return resp.shot.image.data
     
     def ListCameras(self):
         self.GetRobot()
