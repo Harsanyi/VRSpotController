@@ -12,7 +12,7 @@ app = Flask(__name__)
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
 
-server = Server(False)
+server = Server(True)
 
 class JSONProvider(DefaultJSONProvider):
     def default(self,obj):

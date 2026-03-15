@@ -26,7 +26,7 @@ public class Spot : MonoBehaviour
     private SpotState state;
     private float grip;
     private Vector3 armPos;
-
+    
     private void Awake()
     {
         if(instance)Debug.LogError("Multiple Spots Detected!");
@@ -41,14 +41,12 @@ public class Spot : MonoBehaviour
 
         //img is 640x480
         float fovH = 72f;
-        float fovV = fovH * 480f / 640f;
-        Vector2 fov = new(fovH,fovV);
-        StartCoroutine(ImageUpdateRoutine(ImageSource.BACK, Quaternion.Euler(0,180,0), fov));
-        StartCoroutine(ImageUpdateRoutine(ImageSource.LEFT, Quaternion.Euler(0,-180+72f,0), fov));
-        StartCoroutine(ImageUpdateRoutine(ImageSource.RIGHT, Quaternion.Euler(0,180f-72f,0), fov));
-        StartCoroutine(ImageUpdateRoutine(ImageSource.FRONT_LEFT, Quaternion.Euler(0, 72*0.5f, -0), fov));
-        StartCoroutine(ImageUpdateRoutine(ImageSource.FRONT_RIGHT, Quaternion.Euler(0, -72*0.5f, -0), fov));
-        StartCoroutine(ImageUpdateRoutine(ImageSource.HAND, Quaternion.identity, fov));
+        StartCoroutine(ImageUpdateRoutine(ImageSource.BACK, fovH, 180, Sphere.UVDir.UP, 0.99f));
+        StartCoroutine(ImageUpdateRoutine(ImageSource.LEFT,  fovH,-180+fovH, Sphere.UVDir.UP));
+        StartCoroutine(ImageUpdateRoutine(ImageSource.RIGHT, fovH,180f-fovH, Sphere.UVDir.DOWN));
+        StartCoroutine(ImageUpdateRoutine(ImageSource.FRONT_LEFT, fovH,30, Sphere.UVDir.LEFT, 1.01f));
+        StartCoroutine(ImageUpdateRoutine(ImageSource.FRONT_RIGHT, fovH,-30, Sphere.UVDir.LEFT));
+        //StartCoroutine(ImageUpdateRoutine(ImageSource.HAND, Quaternion.identity, fov));
         StartCoroutine(StateUpdateRoutine());
         StartCoroutine(GripRoutine());
         StartCoroutine(ArmPosRoutine());
@@ -167,18 +165,9 @@ public class Spot : MonoBehaviour
         }
     }
 
-    IEnumerator ImageUpdateRoutine(string source, Quaternion rotation, Vector2 angle)
+    IEnumerator ImageUpdateRoutine(string source, float fovH,  float yawAngle, Sphere.UVDir uvDir, float scale=1f)
     {
-        GameObject go = new GameObject(source);
-        go.transform.SetParent(this.transform);
-        go.transform.localScale = Vector3.one * CAM_DISTANCE;
-        go.transform.rotation = rotation;
-        
-        var filter = go.AddComponent<MeshFilter>();
-        filter.mesh = Sphere.GetSlice(angle.x, angle.y, IMAGE_ANGLE_RESOLUTION);
-        var renderer = go.AddComponent<MeshRenderer>();
-        var mat = Instantiate(camMaterial);
-        renderer.material = mat;
+        Material mat = null;
         
         Stopwatch watch = Stopwatch.StartNew();
         const int SEND_MS = 1000 / IMAGE_UPDATE_FREQUENCY;
@@ -195,10 +184,30 @@ public class Spot : MonoBehaviour
             
             if(imageTexture != null)Destroy(imageTexture);
             imageTexture = task.Result;
-            mat.SetTexture("_BaseMap", imageTexture);
+            UpdateMaterial(imageTexture);
             
             long remainingMs = SEND_MS - watch.ElapsedMilliseconds;
             if(remainingMs > 0)yield return new WaitForSeconds(remainingMs / 1000f);
+        }
+
+        void UpdateMaterial(Texture2D texture)
+        {
+            if (mat == null)
+            {
+                GameObject go = new GameObject(source);
+                go.transform.SetParent(this.transform);
+                go.transform.localScale = Vector3.one * CAM_DISTANCE * scale;
+                go.transform.rotation = Quaternion.Euler(0, yawAngle, 0);
+        
+                var filter = go.AddComponent<MeshFilter>();
+                float fovV = texture.height / (float)texture.width * fovH;
+                filter.mesh = Sphere.GetSlice(fovH, fovV, IMAGE_ANGLE_RESOLUTION, uvDir);
+                var renderer = go.AddComponent<MeshRenderer>();
+                mat = Instantiate(camMaterial);
+                renderer.material = mat;
+            }
+            
+            mat.SetTexture("_BaseMap", imageTexture);
         }
     }
 

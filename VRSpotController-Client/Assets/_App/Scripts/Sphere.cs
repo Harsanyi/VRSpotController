@@ -4,10 +4,22 @@ using UnityEngine;
 
 public static class Sphere
 {
-    public static Mesh GetSlice(float widthAngle, float heightAngle, int resolution)
+    public enum UVDir : int
     {
+        UP = 0,
+        RIGHT = 1,
+        DOWN = 2,
+        LEFT = 3
+    }
+    
+    public static Mesh GetSlice(float widthAngle, float heightAngle, int resolution, UVDir uvDir)
+    {
+        if (widthAngle < 1) widthAngle = 1;
+        if (heightAngle < 1) heightAngle = 1;
+        if (resolution < 1) resolution = 1;
+        
         Vector2 startAngle = new(heightAngle*-0.5f, widthAngle*-0.5f);
-        Vector2 angleStep = new(widthAngle / resolution, heightAngle / resolution);
+        Vector2 angleStep = new(heightAngle / resolution, widthAngle / resolution);
 
         List<Vector3> verts = new();
         List<int> tris = new();
@@ -36,8 +48,19 @@ public static class Sphere
 
         Vector2 Angle2UV(Vector2 angle)
         {
-            var uv = new Vector2((angle.x - startAngle.x)/widthAngle, (angle.y - startAngle.y)/heightAngle);
+            float u = (angle.y - startAngle.y) / widthAngle;
+            float v = 1f-((angle.x - startAngle.x) / heightAngle);
+            Vector2 uv = new Vector2(u,v);
+            for (int i = 0; i < (int)uvDir; i++)
+            {
+                uv = RotateCW(uv);
+            }
             return uv;
+        }
+
+        Vector2 RotateCW(Vector2 v)
+        {
+            return new(v.y, -v.x);
         }
 
         for (int x=0; x<resolution; x++)
@@ -48,18 +71,22 @@ public static class Sphere
                 var yAngle = startAngle.y + y * angleStep.y;
 
                 Vector2 corAngle00 = new(xAngle, yAngle);
+                Vector2 corAngle01 = new(xAngle, yAngle+angleStep.y);
                 Vector2 corAngle11 = corAngle00 + angleStep;
+                Vector2 corAngle10 = new(xAngle + angleStep.x, yAngle);
                 
                 Vector2 uv00 = Angle2UV(corAngle00);
                 Vector2 uv11 = Angle2UV(corAngle11);
+                Vector2 uv10 = Angle2UV(corAngle10);
+                Vector2 uv01 = Angle2UV(corAngle01);
 
-                Vector3 p00 = Quaternion.Euler(xAngle, yAngle, 0) * Vector3.forward;
-                Vector3 p01 = Quaternion.Euler(xAngle, yAngle+angleStep.y, 0) * Vector3.forward;
-                Vector3 p10 = Quaternion.Euler(xAngle+angleStep.x, yAngle, 0) * Vector3.forward;
-                Vector3 p11 = Quaternion.Euler(xAngle+angleStep.x, yAngle+angleStep.y, 0) * Vector3.forward;
+                Vector3 p00 = Quaternion.Euler(corAngle00) * Vector3.forward;
+                Vector3 p01 = Quaternion.Euler(corAngle01) * Vector3.forward;
+                Vector3 p10 = Quaternion.Euler(corAngle10) * Vector3.forward;
+                Vector3 p11 = Quaternion.Euler(corAngle11) * Vector3.forward;
                 
-                AddTriangle(p00,p01,p10, uv00, new(uv00.x, uv11.y), new(uv11.x, uv00.y));
-                AddTriangle(p10,p01,p11, new(uv11.x,uv00.y), new(uv00.x, uv11.y), uv11);
+                AddTriangle(p00,p01,p10,uv00,uv01,uv10);
+                AddTriangle(p10,p01,p11,uv10,uv01,uv11);
             }
         }
         
