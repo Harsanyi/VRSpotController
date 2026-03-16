@@ -26,6 +26,9 @@ public class Spot : MonoBehaviour
     public SpotState state { get; private set; }
     private float grip;
     private Vector3 armPos;
+    private bool haveArmControll = false;
+    private Coroutine armControllRoutine;
+    private Coroutine armImageUpdateRoutine;
     
     private void Awake()
     {
@@ -48,8 +51,8 @@ public class Spot : MonoBehaviour
         StartCoroutine(ImageUpdateRoutine(ImageSource.FRONT_RIGHT, fovH,-30, Sphere.UVDir.LEFT));
         //StartCoroutine(ImageUpdateRoutine(ImageSource.HAND, Quaternion.identity, fov));
         StartCoroutine(StateUpdateRoutine());
-        StartCoroutine(GripRoutine());
-        StartCoroutine(ArmPosRoutine());
+        //StartCoroutine(GripRoutine());
+        //StartCoroutine(ArmPosRoutine());
     }
     
     public void Stand()
@@ -75,6 +78,17 @@ public class Spot : MonoBehaviour
     public void Pitch(float val)
     {
         pitch = val;
+    }
+
+    public void SetIsGripping(bool val)
+    {
+        if(haveArmControll == val)return;
+        
+        haveArmControll = val;
+        if (haveArmControll)
+        {
+            armControllRoutine = StartCoroutine(GripRoutine());
+        }
     }
 
     public void Grip(float val)
