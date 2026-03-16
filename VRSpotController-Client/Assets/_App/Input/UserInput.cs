@@ -464,6 +464,94 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 }
             ]
+        },
+        {
+            ""name"": ""Status"",
+            ""id"": ""7d7c54a2-e9f3-4782-8161-c2b15acdc8b2"",
+            ""actions"": [
+                {
+                    ""name"": ""LeftControllerPos"",
+                    ""type"": ""Value"",
+                    ""id"": ""b694c86d-1c78-4562-95ff-3d4d4a6d238b"",
+                    ""expectedControlType"": ""Vector3"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""LeftControllerRot"",
+                    ""type"": ""Value"",
+                    ""id"": ""0eb5c232-0f24-4e24-aea6-e6d6a1990a3e"",
+                    ""expectedControlType"": ""Quaternion"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""RightControllerPos"",
+                    ""type"": ""Value"",
+                    ""id"": ""6083253f-45d7-4bdb-a2d7-181de58411f1"",
+                    ""expectedControlType"": ""Vector3"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""RightControllerRot"",
+                    ""type"": ""Value"",
+                    ""id"": ""4328f882-23c9-4fc2-b25c-2be408bcecfd"",
+                    ""expectedControlType"": ""Quaternion"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""9dc46aff-ca4f-43fc-8f87-3bb00c066106"",
+                    ""path"": ""<XRController>{LeftHand}/devicePosition"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LeftControllerPos"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""37247e73-ee10-4682-ad46-381fbb723ef7"",
+                    ""path"": ""<XRController>{LeftHand}/pointerRotation"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LeftControllerRot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f097c36a-b516-4e73-bccd-f969111ba240"",
+                    ""path"": ""<XRController>{RightHand}/devicePosition"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RightControllerPos"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ec8eb0cb-338d-45eb-b1f4-5f6ce383acc4"",
+                    ""path"": ""<XRController>{RightHand}/pointerRotation"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RightControllerRot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -478,11 +566,18 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
         m_Controll_Grip = m_Controll.FindAction("Grip", throwIfNotFound: true);
         m_Controll_ArmPos = m_Controll.FindAction("ArmPos", throwIfNotFound: true);
         m_Controll_ArmRot = m_Controll.FindAction("ArmRot", throwIfNotFound: true);
+        // Status
+        m_Status = asset.FindActionMap("Status", throwIfNotFound: true);
+        m_Status_LeftControllerPos = m_Status.FindAction("LeftControllerPos", throwIfNotFound: true);
+        m_Status_LeftControllerRot = m_Status.FindAction("LeftControllerRot", throwIfNotFound: true);
+        m_Status_RightControllerPos = m_Status.FindAction("RightControllerPos", throwIfNotFound: true);
+        m_Status_RightControllerRot = m_Status.FindAction("RightControllerRot", throwIfNotFound: true);
     }
 
     ~@UserInput()
     {
         UnityEngine.Debug.Assert(!m_Controll.enabled, "This will cause a leak and performance issues, UserInput.Controll.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_Status.enabled, "This will cause a leak and performance issues, UserInput.Status.Disable() has not been called.");
     }
 
     /// <summary>
@@ -727,6 +822,135 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
     /// Provides a new <see cref="ControllActions" /> instance referencing this action map.
     /// </summary>
     public ControllActions @Controll => new ControllActions(this);
+
+    // Status
+    private readonly InputActionMap m_Status;
+    private List<IStatusActions> m_StatusActionsCallbackInterfaces = new List<IStatusActions>();
+    private readonly InputAction m_Status_LeftControllerPos;
+    private readonly InputAction m_Status_LeftControllerRot;
+    private readonly InputAction m_Status_RightControllerPos;
+    private readonly InputAction m_Status_RightControllerRot;
+    /// <summary>
+    /// Provides access to input actions defined in input action map "Status".
+    /// </summary>
+    public struct StatusActions
+    {
+        private @UserInput m_Wrapper;
+
+        /// <summary>
+        /// Construct a new instance of the input action map wrapper class.
+        /// </summary>
+        public StatusActions(@UserInput wrapper) { m_Wrapper = wrapper; }
+        /// <summary>
+        /// Provides access to the underlying input action "Status/LeftControllerPos".
+        /// </summary>
+        public InputAction @LeftControllerPos => m_Wrapper.m_Status_LeftControllerPos;
+        /// <summary>
+        /// Provides access to the underlying input action "Status/LeftControllerRot".
+        /// </summary>
+        public InputAction @LeftControllerRot => m_Wrapper.m_Status_LeftControllerRot;
+        /// <summary>
+        /// Provides access to the underlying input action "Status/RightControllerPos".
+        /// </summary>
+        public InputAction @RightControllerPos => m_Wrapper.m_Status_RightControllerPos;
+        /// <summary>
+        /// Provides access to the underlying input action "Status/RightControllerRot".
+        /// </summary>
+        public InputAction @RightControllerRot => m_Wrapper.m_Status_RightControllerRot;
+        /// <summary>
+        /// Provides access to the underlying input action map instance.
+        /// </summary>
+        public InputActionMap Get() { return m_Wrapper.m_Status; }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+        public void Enable() { Get().Enable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+        public void Disable() { Get().Disable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+        public bool enabled => Get().enabled;
+        /// <summary>
+        /// Implicitly converts an <see ref="StatusActions" /> to an <see ref="InputActionMap" /> instance.
+        /// </summary>
+        public static implicit operator InputActionMap(StatusActions set) { return set.Get(); }
+        /// <summary>
+        /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <param name="instance">Callback instance.</param>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+        /// </remarks>
+        /// <seealso cref="StatusActions" />
+        public void AddCallbacks(IStatusActions instance)
+        {
+            if (instance == null || m_Wrapper.m_StatusActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_StatusActionsCallbackInterfaces.Add(instance);
+            @LeftControllerPos.started += instance.OnLeftControllerPos;
+            @LeftControllerPos.performed += instance.OnLeftControllerPos;
+            @LeftControllerPos.canceled += instance.OnLeftControllerPos;
+            @LeftControllerRot.started += instance.OnLeftControllerRot;
+            @LeftControllerRot.performed += instance.OnLeftControllerRot;
+            @LeftControllerRot.canceled += instance.OnLeftControllerRot;
+            @RightControllerPos.started += instance.OnRightControllerPos;
+            @RightControllerPos.performed += instance.OnRightControllerPos;
+            @RightControllerPos.canceled += instance.OnRightControllerPos;
+            @RightControllerRot.started += instance.OnRightControllerRot;
+            @RightControllerRot.performed += instance.OnRightControllerRot;
+            @RightControllerRot.canceled += instance.OnRightControllerRot;
+        }
+
+        /// <summary>
+        /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <remarks>
+        /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+        /// </remarks>
+        /// <seealso cref="StatusActions" />
+        private void UnregisterCallbacks(IStatusActions instance)
+        {
+            @LeftControllerPos.started -= instance.OnLeftControllerPos;
+            @LeftControllerPos.performed -= instance.OnLeftControllerPos;
+            @LeftControllerPos.canceled -= instance.OnLeftControllerPos;
+            @LeftControllerRot.started -= instance.OnLeftControllerRot;
+            @LeftControllerRot.performed -= instance.OnLeftControllerRot;
+            @LeftControllerRot.canceled -= instance.OnLeftControllerRot;
+            @RightControllerPos.started -= instance.OnRightControllerPos;
+            @RightControllerPos.performed -= instance.OnRightControllerPos;
+            @RightControllerPos.canceled -= instance.OnRightControllerPos;
+            @RightControllerRot.started -= instance.OnRightControllerRot;
+            @RightControllerRot.performed -= instance.OnRightControllerRot;
+            @RightControllerRot.canceled -= instance.OnRightControllerRot;
+        }
+
+        /// <summary>
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="StatusActions.UnregisterCallbacks(IStatusActions)" />.
+        /// </summary>
+        /// <seealso cref="StatusActions.UnregisterCallbacks(IStatusActions)" />
+        public void RemoveCallbacks(IStatusActions instance)
+        {
+            if (m_Wrapper.m_StatusActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        /// <summary>
+        /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+        /// </summary>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+        /// </remarks>
+        /// <seealso cref="StatusActions.AddCallbacks(IStatusActions)" />
+        /// <seealso cref="StatusActions.RemoveCallbacks(IStatusActions)" />
+        /// <seealso cref="StatusActions.UnregisterCallbacks(IStatusActions)" />
+        public void SetCallbacks(IStatusActions instance)
+        {
+            foreach (var item in m_Wrapper.m_StatusActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_StatusActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    /// <summary>
+    /// Provides a new <see cref="StatusActions" /> instance referencing this action map.
+    /// </summary>
+    public StatusActions @Status => new StatusActions(this);
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Controll" which allows adding and removing callbacks.
     /// </summary>
@@ -790,5 +1014,41 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnArmRot(InputAction.CallbackContext context);
+    }
+    /// <summary>
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Status" which allows adding and removing callbacks.
+    /// </summary>
+    /// <seealso cref="StatusActions.AddCallbacks(IStatusActions)" />
+    /// <seealso cref="StatusActions.RemoveCallbacks(IStatusActions)" />
+    public interface IStatusActions
+    {
+        /// <summary>
+        /// Method invoked when associated input action "LeftControllerPos" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnLeftControllerPos(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "LeftControllerRot" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnLeftControllerRot(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "RightControllerPos" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnRightControllerPos(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "RightControllerRot" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnRightControllerRot(InputAction.CallbackContext context);
     }
 }

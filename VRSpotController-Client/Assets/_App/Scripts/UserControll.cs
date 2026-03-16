@@ -7,11 +7,15 @@ using UnityEngine.UI;
 public class UserControll : MonoBehaviour
 {
     private UserInput input;
+    
+    [SerializeField] Transform leftController;
+    [SerializeField] Transform rightController;
 
     private void Start()
     {
         input = new UserInput();
         input.Controll.Enable();
+        input.Status.Enable();
 
         input.Controll.Stand.performed += OnStandPressed;
         input.Controll.Power.performed += OnPowerOnPressed;
@@ -19,10 +23,23 @@ public class UserControll : MonoBehaviour
 
     private void Update()
     {
+        UpdateControllers();
         HandleMovement();
         HandlePitch();
         HandleGrip();
         HandleArm();
+    }
+
+    void UpdateControllers()
+    {
+        Vector3 leftPos = input.Status.LeftControllerPos.ReadValue<Vector3>();
+        leftController.localPosition = leftPos;
+        Quaternion leftRot = input.Status.LeftControllerRot.ReadValue<Quaternion>();
+        leftController.localRotation = leftRot;
+        Vector3 rightPos = input.Status.RightControllerPos.ReadValue<Vector3>();
+        rightController.localPosition = rightPos;
+        Quaternion rightRot = input.Status.RightControllerRot.ReadValue<Quaternion>();
+        rightController.localRotation = rightRot;
     }
 
     void HandleArm()

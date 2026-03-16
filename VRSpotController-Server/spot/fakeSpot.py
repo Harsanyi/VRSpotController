@@ -4,6 +4,16 @@ from math import sin
 from numpy import *
 from bosdyn.client.math_helpers import *
 
+from enum import Enum
+
+class PowerState(Enum):
+    UNKNOWN = 0
+    OFF = 1
+    ON = 2
+    POWERING_ON = 3
+    POWERING_OFF = 4
+    ERROR = 5
+
 class FakeSpot():
     debugImages = {}
     pose : int = 0
@@ -15,6 +25,7 @@ class FakeSpot():
 
     def __init__(self):
         self.loadDebugImages()
+        self.power = PowerState.OFF.value
 
     def loadDebugImage(self,name:str):
         try:
@@ -40,7 +51,7 @@ class FakeSpot():
         return img
     
     def GetBattery(self):
-        return sin(time.time()*5)*0.5+0.5
+        return sin(time.time()*0.2)*0.5+0.5
     
     def GetState(self) -> SpotState:
         state : SpotState = SpotState()
@@ -67,3 +78,19 @@ class FakeSpot():
         state.armRotZ = self.armRotation.z
 
         return state
+    
+    def PowerOn(self):
+        if(self.power == PowerState.OFF.value):
+            self.power = PowerState.POWERING_ON.value
+            time.sleep(2)
+            self.power = PowerState.ON.value
+        else:
+            print("PowerOn called but Spot is not in OFF state. "+str(self.power))             
+                
+    def DropLease(self):
+        if(self.power == PowerState.ON.value):
+            self.power = PowerState.POWERING_OFF.value
+            time.sleep(2)
+            self.power = PowerState.OFF.value
+        else:
+            print("DropLease called but Spot is not in ON state. "+str(self.power))

@@ -23,7 +23,7 @@ public class Spot : MonoBehaviour
     private Vector2 move;
     private float yaw;
     private float pitch;
-    private SpotState state;
+    public SpotState state { get; private set; }
     private float grip;
     private Vector3 armPos;
     

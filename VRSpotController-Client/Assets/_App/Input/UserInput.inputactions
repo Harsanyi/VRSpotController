@@ -378,6 +378,94 @@
                     "isPartOfComposite": true
                 }
             ]
+        },
+        {
+            "name": "Status",
+            "id": "7d7c54a2-e9f3-4782-8161-c2b15acdc8b2",
+            "actions": [
+                {
+                    "name": "LeftControllerPos",
+                    "type": "Value",
+                    "id": "b694c86d-1c78-4562-95ff-3d4d4a6d238b",
+                    "expectedControlType": "Vector3",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "LeftControllerRot",
+                    "type": "Value",
+                    "id": "0eb5c232-0f24-4e24-aea6-e6d6a1990a3e",
+                    "expectedControlType": "Quaternion",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "RightControllerPos",
+                    "type": "Value",
+                    "id": "6083253f-45d7-4bdb-a2d7-181de58411f1",
+                    "expectedControlType": "Vector3",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "RightControllerRot",
+                    "type": "Value",
+                    "id": "4328f882-23c9-4fc2-b25c-2be408bcecfd",
+                    "expectedControlType": "Quaternion",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "9dc46aff-ca4f-43fc-8f87-3bb00c066106",
+                    "path": "<XRController>{LeftHand}/devicePosition",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeftControllerPos",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "37247e73-ee10-4682-ad46-381fbb723ef7",
+                    "path": "<XRController>{LeftHand}/pointerRotation",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeftControllerRot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f097c36a-b516-4e73-bccd-f969111ba240",
+                    "path": "<XRController>{RightHand}/devicePosition",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RightControllerPos",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ec8eb0cb-338d-45eb-b1f4-5f6ce383acc4",
+                    "path": "<XRController>{RightHand}/pointerRotation",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RightControllerRot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []
