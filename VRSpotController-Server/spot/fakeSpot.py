@@ -6,6 +6,8 @@ from bosdyn.client.math_helpers import *
 
 from enum import Enum
 
+from vector import vector2, vector3, vector4
+
 class PowerState(Enum):
     UNKNOWN = 0
     OFF = 1
@@ -13,6 +15,13 @@ class PowerState(Enum):
     POWERING_ON = 3
     POWERING_OFF = 4
     ERROR = 5
+
+class Pose(Enum):
+    UNKNOWN = 0,
+    NOT_READY = 1,
+    TRANSITION = 2,
+    STANDING = 3,
+    STEPPING = 4
 
 class FakeSpot():
     debugImages = {}
@@ -22,6 +31,10 @@ class FakeSpot():
     rotation : Quat = Quat(0,0,0,1)
     armPosition : Vec3 = Vec3(0,0,0)
     armRotation : Quat = Quat(0,0,0,1)
+
+    standing : int = Pose.NOT_READY.value
+    moveing : bool = False
+    speed : float = 0.1
 
     def __init__(self):
         self.loadDebugImages()
@@ -56,6 +69,7 @@ class FakeSpot():
     def GetState(self) -> SpotState:
         state : SpotState = SpotState()
         state.battery = self.GetBattery()
+        self.UpdatePose()
         state.poseState = self.pose
         state.powerState = self.power
         
@@ -94,3 +108,36 @@ class FakeSpot():
             self.power = PowerState.OFF.value
         else:
             print("DropLease called but Spot is not in ON state. "+str(self.power))
+
+    def UpdatePose(self):
+        if self.moveing:
+            self.pose = Pose.STEPPING.value
+            return 
+        self.pose = self.standing
+
+    def StandUp(self):
+        if self.standing == Pose.STANDING.value:
+            return
+        
+        self.standing = Pose.TRANSITION.value
+        time.sleep(2)
+        self.standing = Pose.STANDING.value
+      
+    def SitDown(self):
+        if self.standing == Pose.NOT_READY.value:
+            return
+        self.standing = Pose.TRANSITION.value
+        time.sleep(2)
+        self.standing = Pose.NOT_READY.value
+
+    def Move(self, delta:vector2, yaw:float, speed:float):
+        self.position += delta.normalized() * speed
+        self.rotation = Quat.from_euler(0,yaw * speed,0) * self.rotation
+        self.moveing = delta.Magnitude() > 0.01
+
+    def Pitch(self, pitch:float):
+        self.rotation = Quat.from_euler(pitch,0,0) * self.rotation
+
+    def SetArm(self, pos:vector3, rot:vector4):
+        self.armPosition = pos
+        self.armRotation = Quat(rot.x, rot.y, rot.z, rot.w)

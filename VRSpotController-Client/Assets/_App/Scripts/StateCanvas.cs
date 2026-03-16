@@ -7,6 +7,7 @@ public class StateCanvas : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI powerValue;
     [SerializeField] private TextMeshProUGUI batteryValue;
+    [SerializeField] private TextMeshProUGUI standingValue;
 
     static Dictionary<SpotState.Power, Color> powerColors = new()
     {
