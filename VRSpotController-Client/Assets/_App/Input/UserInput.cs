@@ -120,19 +120,10 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Yaw"",
+                    ""name"": ""Rotate"",
                     ""type"": ""Value"",
                     ""id"": ""48560b9a-2d42-4d0c-8bec-16de565d2f27"",
-                    ""expectedControlType"": ""Axis"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                },
-                {
-                    ""name"": ""Pitch"",
-                    ""type"": ""Value"",
-                    ""id"": ""75972cb9-b808-44bd-a207-3e0db02f14bf"",
-                    ""expectedControlType"": ""Axis"",
+                    ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
@@ -289,72 +280,6 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""1D Axis"",
-                    ""id"": ""0e498f0c-7081-4905-a5b7-7ac0b12ed718"",
-                    ""path"": ""1DAxis"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Yaw"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""negative"",
-                    ""id"": ""56fa64a6-3e35-48be-9d65-1722f014f620"",
-                    ""path"": ""<Keyboard>/leftArrow"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Yaw"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""positive"",
-                    ""id"": ""23b32d5f-abba-4859-ae68-cc1cb0530058"",
-                    ""path"": ""<Keyboard>/rightArrow"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Yaw"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""1D Axis"",
-                    ""id"": ""e1a4aaeb-9e1b-4fc9-a07e-83d3583454c4"",
-                    ""path"": ""1DAxis"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Pitch"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""negative"",
-                    ""id"": ""09849916-81f8-4b66-b738-2b818ee5def9"",
-                    ""path"": ""<Keyboard>/downArrow"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Pitch"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""positive"",
-                    ""id"": ""800c7cb5-6952-464f-93cc-af122ffdcc3d"",
-                    ""path"": ""<Keyboard>/upArrow"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Pitch"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""1D Axis"",
                     ""id"": ""61272a67-bab5-46fb-beb1-9527f300446b"",
                     ""path"": ""1DAxis"",
                     ""interactions"": """",
@@ -462,6 +387,72 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
                     ""action"": ""ArmPos"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""2D Vector"",
+                    ""id"": ""84f84fa4-0022-4661-bd8d-478ea8668a35"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Rotate"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""edb5a91b-cbe0-495c-8a10-897f012a4a0f"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Rotate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""bc994847-0cf3-40e4-9979-f950e9c7b4cf"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Rotate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""2634684f-a51d-4813-8fd1-e9cee394f8ef"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Rotate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""79c92692-0d21-412c-86e1-6e491da77cc5"",
+                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Rotate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""fc83a389-fb92-499c-85cd-364ff6aa07f7"",
+                    ""path"": ""<XRController>{RightHand}/joystick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Rotate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -561,8 +552,7 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
         m_Controll_Move = m_Controll.FindAction("Move", throwIfNotFound: true);
         m_Controll_Stand = m_Controll.FindAction("Stand", throwIfNotFound: true);
         m_Controll_Power = m_Controll.FindAction("Power", throwIfNotFound: true);
-        m_Controll_Yaw = m_Controll.FindAction("Yaw", throwIfNotFound: true);
-        m_Controll_Pitch = m_Controll.FindAction("Pitch", throwIfNotFound: true);
+        m_Controll_Rotate = m_Controll.FindAction("Rotate", throwIfNotFound: true);
         m_Controll_Grip = m_Controll.FindAction("Grip", throwIfNotFound: true);
         m_Controll_ArmPos = m_Controll.FindAction("ArmPos", throwIfNotFound: true);
         m_Controll_ArmRot = m_Controll.FindAction("ArmRot", throwIfNotFound: true);
@@ -656,8 +646,7 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_Controll_Move;
     private readonly InputAction m_Controll_Stand;
     private readonly InputAction m_Controll_Power;
-    private readonly InputAction m_Controll_Yaw;
-    private readonly InputAction m_Controll_Pitch;
+    private readonly InputAction m_Controll_Rotate;
     private readonly InputAction m_Controll_Grip;
     private readonly InputAction m_Controll_ArmPos;
     private readonly InputAction m_Controll_ArmRot;
@@ -685,13 +674,9 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @Power => m_Wrapper.m_Controll_Power;
         /// <summary>
-        /// Provides access to the underlying input action "Controll/Yaw".
+        /// Provides access to the underlying input action "Controll/Rotate".
         /// </summary>
-        public InputAction @Yaw => m_Wrapper.m_Controll_Yaw;
-        /// <summary>
-        /// Provides access to the underlying input action "Controll/Pitch".
-        /// </summary>
-        public InputAction @Pitch => m_Wrapper.m_Controll_Pitch;
+        public InputAction @Rotate => m_Wrapper.m_Controll_Rotate;
         /// <summary>
         /// Provides access to the underlying input action "Controll/Grip".
         /// </summary>
@@ -739,12 +724,9 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
             @Power.started += instance.OnPower;
             @Power.performed += instance.OnPower;
             @Power.canceled += instance.OnPower;
-            @Yaw.started += instance.OnYaw;
-            @Yaw.performed += instance.OnYaw;
-            @Yaw.canceled += instance.OnYaw;
-            @Pitch.started += instance.OnPitch;
-            @Pitch.performed += instance.OnPitch;
-            @Pitch.canceled += instance.OnPitch;
+            @Rotate.started += instance.OnRotate;
+            @Rotate.performed += instance.OnRotate;
+            @Rotate.canceled += instance.OnRotate;
             @Grip.started += instance.OnGrip;
             @Grip.performed += instance.OnGrip;
             @Grip.canceled += instance.OnGrip;
@@ -774,12 +756,9 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
             @Power.started -= instance.OnPower;
             @Power.performed -= instance.OnPower;
             @Power.canceled -= instance.OnPower;
-            @Yaw.started -= instance.OnYaw;
-            @Yaw.performed -= instance.OnYaw;
-            @Yaw.canceled -= instance.OnYaw;
-            @Pitch.started -= instance.OnPitch;
-            @Pitch.performed -= instance.OnPitch;
-            @Pitch.canceled -= instance.OnPitch;
+            @Rotate.started -= instance.OnRotate;
+            @Rotate.performed -= instance.OnRotate;
+            @Rotate.canceled -= instance.OnRotate;
             @Grip.started -= instance.OnGrip;
             @Grip.performed -= instance.OnGrip;
             @Grip.canceled -= instance.OnGrip;
@@ -980,19 +959,12 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnPower(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "Yaw" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Rotate" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnYaw(InputAction.CallbackContext context);
-        /// <summary>
-        /// Method invoked when associated input action "Pitch" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnPitch(InputAction.CallbackContext context);
+        void OnRotate(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "Grip" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>

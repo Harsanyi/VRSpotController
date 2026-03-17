@@ -21,8 +21,7 @@ public class Spot : MonoBehaviour
     
     private SpotServer server;
     private Vector2 move;
-    private float yaw;
-    private float pitch;
+    private Vector2 rotate;
     public SpotState state { get; private set; }
     private float grip;
     private Vector3 armPos;
@@ -69,15 +68,10 @@ public class Spot : MonoBehaviour
     {
         move = dir;
     }
-
-    public void Yaw(float val)
+    
+    public void Rotate(Vector2 rot)
     {
-        yaw = val;
-    }
-
-    public void Pitch(float val)
-    {
-        pitch = val;
+        rotate = rot;
     }
 
     public void SetIsGripping(bool val)
@@ -110,11 +104,11 @@ public class Spot : MonoBehaviour
         while (Application.isPlaying)
         {
             watch.Restart();
-            if (move != lastMove || yaw != lastYaw)
+            if (move != lastMove || rotate.x != lastYaw)
             {
-                server.Move(move, yaw);
+                server.Move(move, rotate.x);
                 lastMove = move;
-                lastYaw = yaw;
+                lastYaw = rotate.x;
             }
 
             long remaningMs = SEND_MS - watch.ElapsedMilliseconds;
@@ -149,10 +143,10 @@ public class Spot : MonoBehaviour
         while (Application.isPlaying)
         {
             watch.Restart();
-            if (pitch != lastPitch)
+            if (rotate.y != lastPitch)
             {
-                server.Pitch(pitch);
-                lastPitch = pitch;
+                server.Pitch(rotate.y);
+                lastPitch = rotate.y;
             }
 
             long remaningMs = SEND_MS - watch.ElapsedMilliseconds;

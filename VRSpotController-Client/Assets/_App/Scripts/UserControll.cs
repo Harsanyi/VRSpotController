@@ -25,7 +25,7 @@ public class UserControll : MonoBehaviour
     {
         UpdateControllers();
         HandleMovement();
-        HandlePitch();
+        HandleRotate();
         HandleGrip();
         HandleArm();
     }
@@ -52,14 +52,21 @@ public class UserControll : MonoBehaviour
     {
         var dir = input.Controll.Move.ReadValue<Vector2>();
         Spot.instance.Move(dir);
-        var yaw = input.Controll.Yaw.ReadValue<float>();
-        Spot.instance.Yaw(yaw);
     }
 
-    void HandlePitch()
+    void HandleRotate()
     {
-        var pitch = input.Controll.Pitch.ReadValue<float>();
-        Spot.instance.Pitch(pitch);
+        var rotate = input.Controll.Rotate.ReadValue<Vector2>();
+        if (math.abs(rotate.x) > math.abs(rotate.y))
+        {
+            rotate.y = 0f;
+        }
+        else
+        {
+            rotate.x = 0f;
+        }
+
+        Spot.instance.Rotate(rotate);
     }
 
     void HandleGrip()
