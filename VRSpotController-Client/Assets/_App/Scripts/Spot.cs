@@ -21,6 +21,7 @@ public class Spot : MonoBehaviour
     
     private SpotServer server;
     private Vector2 move;
+    private float speed = 0.5f;
     private Vector2 rotate;
     public SpotState state { get; private set; }
     private float grip;
@@ -66,7 +67,7 @@ public class Spot : MonoBehaviour
 
     public void Move(Vector2 dir)
     {
-        move = dir;
+        move = dir * speed;
     }
     
     public void Rotate(Vector2 rot)

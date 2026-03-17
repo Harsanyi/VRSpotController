@@ -22,7 +22,7 @@ class Server:
     
     def move(self,req:MoveRequest):
         try:
-            self.spot.Move(req.move,req.yaw,1)
+            self.spot.Move(req.move,req.yaw)
             resp = Response(True, f"Moving to {req.move.x}, {req.move.y}!")
         except Exception as e:
             resp = Response(False, f"Error:{e}")

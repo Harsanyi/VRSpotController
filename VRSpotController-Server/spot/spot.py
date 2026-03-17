@@ -214,7 +214,7 @@ class Spot():
         blocking_sit(cmd, timeout_sec=self.timeout)
         print("Spot Sitting.")
         
-    def Move(self, delta:vector2, yaw:float, speed:float):
+    def Move(self, delta:vector2, yaw:float):
         self.GetLeaseAlive()
 
         cmd_cl = self.GetCommandClient()
@@ -226,8 +226,8 @@ class Spot():
             locomotion_hint=spot_command_pb2.HINT_AUTO
         )
 
-        duration = delta.Magnitude() / speed + abs(yaw) / speed
         try:
+            duration = 0.5
             cmd_cl.robot_command(cmd, end_time_secs=time.time()+duration)
             time.sleep(duration)
 
