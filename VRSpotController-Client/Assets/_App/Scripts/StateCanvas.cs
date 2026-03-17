@@ -34,12 +34,12 @@ public class StateCanvas : MonoBehaviour
     private void Update()
     {
         var state = Spot.instance.state;
-
-        batteryValue.text = ((int)(state.battery * 100)).ToString().Color(Color.Lerp(Color.red, Color.green, state.battery));
+        
+        batteryValue.text = state.battery.ToString().Color(Color.Lerp(Color.red, Color.green, state.battery / 100f));
         powerValue.text = state.power.ToString().Color(powerColors[state.power]);
-        standingValue.text = state.poseState.ToString().Color(poseColors[state.pose]);
-        positionValue.text = state.pos.ToString("n5");
-        rotationValue.text = state.rot.eulerAngles.ToString("n5");
+        standingValue.text = state.pose.ToString().Color(poseColors[state.pose]);
+        positionValue.text = state.pos.ToString("n2");
+        rotationValue.text = state.rot.eulerAngles.ToString("n2");
         
     }
 }

@@ -54,7 +54,12 @@ public class Spot : MonoBehaviour
         //StartCoroutine(GripRoutine());
         //StartCoroutine(ArmPosRoutine());
     }
-    
+
+    private void Update()
+    {
+        this.transform.rotation = Quaternion.Euler(-state.rot.eulerAngles.x, 0f, 0f);
+    }
+
     public void Stand()
     {
         server.SetStanding(!server.isStanding);

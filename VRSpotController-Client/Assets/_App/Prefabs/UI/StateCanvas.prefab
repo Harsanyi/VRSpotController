@@ -118,6 +118,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::StateCanvas
   powerValue: {fileID: 1580816670959895638}
   batteryValue: {fileID: 6977719307697116069}
+  standingValue: {fileID: 7274510930624998905}
+  positionValue: {fileID: 4319836961396340542}
+  rotationValue: {fileID: 1565815543128157866}
+  armCountValue: {fileID: 1285459377398614079}
 --- !u!1001 &1211791474255596049
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -332,6 +336,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 561626221562187811, guid: dabab26e47df65d4c9d7e1e08de4c4de, type: 3}
   m_PrefabInstance: {fileID: 1287787866234378235}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &7274510930624998905 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8442953097208936962, guid: dabab26e47df65d4c9d7e1e08de4c4de, type: 3}
+  m_PrefabInstance: {fileID: 1287787866234378235}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!1001 &1503466964933896501
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1159,7 +1174,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2899374356133469780, guid: a8b63513f73c73042961346f78944c11, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 37.1
+      value: 40.355
       objectReference: {fileID: 0}
     - target: {fileID: 2899374356133469780, guid: a8b63513f73c73042961346f78944c11, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -1763,6 +1778,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dabab26e47df65d4c9d7e1e08de4c4de, type: 3}
+--- !u!114 &4319836961396340542 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8442953097208936962, guid: dabab26e47df65d4c9d7e1e08de4c4de, type: 3}
+  m_PrefabInstance: {fileID: 5681363290560499004}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!224 &5265567633994931487 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 561626221562187811, guid: dabab26e47df65d4c9d7e1e08de4c4de, type: 3}
@@ -2081,6 +2107,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dabab26e47df65d4c9d7e1e08de4c4de, type: 3}
+--- !u!114 &1565815543128157866 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8442953097208936962, guid: dabab26e47df65d4c9d7e1e08de4c4de, type: 3}
+  m_PrefabInstance: {fileID: 6958485746816406696}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!224 &7447491406922122379 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 561626221562187811, guid: dabab26e47df65d4c9d7e1e08de4c4de, type: 3}
@@ -2406,6 +2443,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dabab26e47df65d4c9d7e1e08de4c4de, type: 3}
+--- !u!114 &1285459377398614079 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8442953097208936962, guid: dabab26e47df65d4c9d7e1e08de4c4de, type: 3}
+  m_PrefabInstance: {fileID: 7277178618812707389}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!224 &7149173550675681822 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 561626221562187811, guid: dabab26e47df65d4c9d7e1e08de4c4de, type: 3}
