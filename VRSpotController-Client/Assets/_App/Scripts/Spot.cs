@@ -7,13 +7,13 @@ using Debug = UnityEngine.Debug;
 
 public class Spot : MonoBehaviour
 {
-    private const int MOVE_UPDATE_FREQUENCY = 10;
-    private const int IMAGE_UPDATE_FREQUENCY = 10;
-    private const int PITCH_UPDATE_FREQUENCY = 10;
-    private const int IMAGE_ANGLE_RESOLUTION = 10;
-    private const int GRIP_UPDATE_FREQUENCY = 10;
+    private const int MOVE_UPDATE_FREQUENCY = 20;
+    private const int IMAGE_UPDATE_FREQUENCY = 20;
+    private const int PITCH_UPDATE_FREQUENCY = 20;
+    private const int IMAGE_ANGLE_RESOLUTION = 20;
+    private const int GRIP_UPDATE_FREQUENCY = 20;
     private const float CAM_DISTANCE = 500;
-    private const int STATE_UPDATE_FREQUENCY = 10;
+    private const int STATE_UPDATE_FREQUENCY = 20;
     
     public static Spot instance { get; private set; } = null;
 
@@ -80,8 +80,9 @@ public class Spot : MonoBehaviour
         rotate = rot;
     }
 
-    public void SetIsGripping(bool val)
+    public void SetArmControll(bool val)
     {
+        Debug.Log("Arm controll changed "+val);
         if(haveArmControll == val)return;
         
         haveArmControll = val;
@@ -240,7 +241,6 @@ public class Spot : MonoBehaviour
             }
             
             state = task.Result;
-            Debug.Log(state);
 
             long remains = updateTime - watch.ElapsedMilliseconds;
             if (remains > 0) yield return new WaitForSeconds(remains / 1000f);

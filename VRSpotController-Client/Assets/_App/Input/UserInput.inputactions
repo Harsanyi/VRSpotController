@@ -68,6 +68,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "ArmControll",
+                    "type": "Button",
+                    "id": "74f2ea44-e721-46bb-a51f-f9e273cf8e84",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -365,6 +374,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Rotate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0ca0b149-0f3f-4ff0-aebb-1734fd1e1f5d",
+                    "path": "<XRController>{RightHand}/{GripButton}",
+                    "interactions": "Press(behavior=2)",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ArmControll",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -154,6 +154,15 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""ArmControll"",
+                    ""type"": ""Button"",
+                    ""id"": ""74f2ea44-e721-46bb-a51f-f9e273cf8e84"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -453,6 +462,17 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
                     ""action"": ""Rotate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0ca0b149-0f3f-4ff0-aebb-1734fd1e1f5d"",
+                    ""path"": ""<XRController>{RightHand}/{GripButton}"",
+                    ""interactions"": ""Press(behavior=2)"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ArmControll"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -556,6 +576,7 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
         m_Controll_Grip = m_Controll.FindAction("Grip", throwIfNotFound: true);
         m_Controll_ArmPos = m_Controll.FindAction("ArmPos", throwIfNotFound: true);
         m_Controll_ArmRot = m_Controll.FindAction("ArmRot", throwIfNotFound: true);
+        m_Controll_ArmControll = m_Controll.FindAction("ArmControll", throwIfNotFound: true);
         // Status
         m_Status = asset.FindActionMap("Status", throwIfNotFound: true);
         m_Status_LeftControllerPos = m_Status.FindAction("LeftControllerPos", throwIfNotFound: true);
@@ -650,6 +671,7 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_Controll_Grip;
     private readonly InputAction m_Controll_ArmPos;
     private readonly InputAction m_Controll_ArmRot;
+    private readonly InputAction m_Controll_ArmControll;
     /// <summary>
     /// Provides access to input actions defined in input action map "Controll".
     /// </summary>
@@ -689,6 +711,10 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Controll/ArmRot".
         /// </summary>
         public InputAction @ArmRot => m_Wrapper.m_Controll_ArmRot;
+        /// <summary>
+        /// Provides access to the underlying input action "Controll/ArmControll".
+        /// </summary>
+        public InputAction @ArmControll => m_Wrapper.m_Controll_ArmControll;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -736,6 +762,9 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
             @ArmRot.started += instance.OnArmRot;
             @ArmRot.performed += instance.OnArmRot;
             @ArmRot.canceled += instance.OnArmRot;
+            @ArmControll.started += instance.OnArmControll;
+            @ArmControll.performed += instance.OnArmControll;
+            @ArmControll.canceled += instance.OnArmControll;
         }
 
         /// <summary>
@@ -768,6 +797,9 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
             @ArmRot.started -= instance.OnArmRot;
             @ArmRot.performed -= instance.OnArmRot;
             @ArmRot.canceled -= instance.OnArmRot;
+            @ArmControll.started -= instance.OnArmControll;
+            @ArmControll.performed -= instance.OnArmControll;
+            @ArmControll.canceled -= instance.OnArmControll;
         }
 
         /// <summary>
@@ -986,6 +1018,13 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnArmRot(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "ArmControll" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnArmControll(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Status" which allows adding and removing callbacks.

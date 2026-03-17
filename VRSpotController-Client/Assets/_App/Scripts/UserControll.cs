@@ -19,6 +19,8 @@ public class UserControll : MonoBehaviour
 
         input.Controll.Stand.performed += OnStandPressed;
         input.Controll.Power.performed += OnPowerOnPressed;
+        input.Controll.ArmControll.started += OnBeginArmControll;
+        input.Controll.ArmControll.canceled += OnEndArmControll;
     }
 
     private void Update()
@@ -84,5 +86,15 @@ public class UserControll : MonoBehaviour
     void OnPowerOnPressed(InputAction.CallbackContext context)
     {
         Spot.instance.PowerOn();
+    }
+
+    void OnBeginArmControll(InputAction.CallbackContext context)
+    {
+        Spot.instance.SetArmControll(true);
+    }
+    
+    void OnEndArmControll(InputAction.CallbackContext context)
+    {
+        Spot.instance.SetArmControll(false);
     }
 }
