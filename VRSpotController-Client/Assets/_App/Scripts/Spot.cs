@@ -32,6 +32,7 @@ public class Spot : MonoBehaviour
     private bool haveArmControll = false;
     private Coroutine armControllRoutine;
     private Coroutine armImageUpdateRoutine;
+    private Coroutine gripUpdateRoutine;
     
     private void Awake()
     {
@@ -51,8 +52,6 @@ public class Spot : MonoBehaviour
         StartCoroutine(ImageUpdateRoutine(ImageSource.FRONT_LEFT, FOVH,30, Sphere.UVDir.LEFT, 1.01f));
         StartCoroutine(ImageUpdateRoutine(ImageSource.FRONT_RIGHT, FOVH,-30, Sphere.UVDir.LEFT));
         StartCoroutine(StateUpdateRoutine());
-        //StartCoroutine(GripRoutine());
-        //StartCoroutine(ArmPosRoutine());
     }
 
     private void Update()
@@ -100,10 +99,12 @@ public class Spot : MonoBehaviour
         haveArmControll = val;
         
         if(armImageUpdateRoutine != null)StopCoroutine(armImageUpdateRoutine);
+        if(gripUpdateRoutine != null)StopCoroutine(gripUpdateRoutine);
         
         if (haveArmControll)
         {
             armImageUpdateRoutine = StartCoroutine(ImageUpdateRoutine(ImageSource.HAND, FOVH, 0,  Sphere.UVDir.UP, 0.1f));
+            gripUpdateRoutine = StartCoroutine(GripRoutine());
         }
 
         if (!haveArmControll)

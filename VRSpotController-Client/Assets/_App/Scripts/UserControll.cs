@@ -74,6 +74,7 @@ public class UserControll : MonoBehaviour
     {
         var grip = input.Controll.Grip.ReadValue<float>();
         grip = math.clamp(grip, 0f, 1f);
+        Debug.Log("Grip "+grip);
         Spot.instance.Grip(grip);
     }
 

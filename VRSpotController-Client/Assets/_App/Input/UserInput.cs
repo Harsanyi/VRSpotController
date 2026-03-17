@@ -303,6 +303,17 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 },
                 {
+                    ""name"": """",
+                    ""id"": ""a3b82426-2ba9-4c71-ad6a-5d0c60ff75cc"",
+                    ""path"": ""<XRController>{RightHand}/{Trigger}"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Grip"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
                     ""name"": ""2D Vector"",
                     ""id"": ""84f84fa4-0022-4661-bd8d-478ea8668a35"",
                     ""path"": ""2DVector"",
