@@ -46,8 +46,7 @@ public class UserControll : MonoBehaviour
 
     void HandleArm()
     {
-        var pos = input.Controll.ArmPos.ReadValue<Vector3>();
-        Spot.instance.ArmPos(pos);
+        Spot.instance.ArmTransform(rightController.position, rightController.rotation);
     }
 
     void HandleMovement()

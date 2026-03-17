@@ -7,13 +7,14 @@ using Debug = UnityEngine.Debug;
 
 public class Spot : MonoBehaviour
 {
-    private const int MOVE_UPDATE_FREQUENCY = 20;
+    private const int MOVE_UPDATE_FREQUENCY = 10;
     private const int IMAGE_UPDATE_FREQUENCY = 20;
-    private const int PITCH_UPDATE_FREQUENCY = 20;
-    private const int IMAGE_ANGLE_RESOLUTION = 20;
+    private const int PITCH_UPDATE_FREQUENCY = 10;
+    private const int IMAGE_ANGLE_RESOLUTION = 10;
     private const int GRIP_UPDATE_FREQUENCY = 20;
     private const float CAM_DISTANCE = 500;
-    private const int STATE_UPDATE_FREQUENCY = 20;
+    private const int STATE_UPDATE_FREQUENCY = 10;
+    const float FOVH = 72f;
     
     public static Spot instance { get; private set; } = null;
 
@@ -24,8 +25,10 @@ public class Spot : MonoBehaviour
     private float speed = 0.5f;
     private Vector2 rotate;
     public SpotState state { get; private set; }
+    
     private float grip;
     private Vector3 armPos;
+    private Quaternion armRot;
     private bool haveArmControll = false;
     private Coroutine armControllRoutine;
     private Coroutine armImageUpdateRoutine;
@@ -41,15 +44,12 @@ public class Spot : MonoBehaviour
         server = new SpotServer();
         StartCoroutine(MoveRoutine());
         StartCoroutine(PitchRoutine());
-
-        //img is 640x480
-        float fovH = 72f;
-        StartCoroutine(ImageUpdateRoutine(ImageSource.BACK, fovH, 180, Sphere.UVDir.UP, 0.99f));
-        StartCoroutine(ImageUpdateRoutine(ImageSource.LEFT,  fovH,-180+fovH, Sphere.UVDir.UP));
-        StartCoroutine(ImageUpdateRoutine(ImageSource.RIGHT, fovH,180f-fovH, Sphere.UVDir.DOWN));
-        StartCoroutine(ImageUpdateRoutine(ImageSource.FRONT_LEFT, fovH,30, Sphere.UVDir.LEFT, 1.01f));
-        StartCoroutine(ImageUpdateRoutine(ImageSource.FRONT_RIGHT, fovH,-30, Sphere.UVDir.LEFT));
-        //StartCoroutine(ImageUpdateRoutine(ImageSource.HAND, Quaternion.identity, fov));
+        
+        StartCoroutine(ImageUpdateRoutine(ImageSource.BACK, FOVH, 180, Sphere.UVDir.UP, 0.99f));
+        StartCoroutine(ImageUpdateRoutine(ImageSource.LEFT,  FOVH,-180+FOVH, Sphere.UVDir.UP));
+        StartCoroutine(ImageUpdateRoutine(ImageSource.RIGHT, FOVH,180f-FOVH, Sphere.UVDir.DOWN));
+        StartCoroutine(ImageUpdateRoutine(ImageSource.FRONT_LEFT, FOVH,30, Sphere.UVDir.LEFT, 1.01f));
+        StartCoroutine(ImageUpdateRoutine(ImageSource.FRONT_RIGHT, FOVH,-30, Sphere.UVDir.LEFT));
         StartCoroutine(StateUpdateRoutine());
         //StartCoroutine(GripRoutine());
         //StartCoroutine(ArmPosRoutine());
@@ -58,6 +58,20 @@ public class Spot : MonoBehaviour
     private void Update()
     {
         this.transform.rotation = Quaternion.Euler(-state.rot.eulerAngles.x, 0f, 0f);
+        if (haveArmControll)
+        {
+            UpdateArmImagePosition();
+        }
+    }
+
+    void UpdateArmImagePosition()
+    {
+        var imgTrans = transform.Find(ImageSource.HAND);
+        if(!imgTrans)return;
+
+        if (imgTrans.localScale.x != 1f) imgTrans.localScale = Vector3.one;
+        imgTrans.position = armPos;
+        imgTrans.rotation = armRot;
     }
 
     public void Stand()
@@ -82,13 +96,32 @@ public class Spot : MonoBehaviour
 
     public void SetArmControll(bool val)
     {
-        Debug.Log("Arm controll changed "+val);
         if(haveArmControll == val)return;
-        
         haveArmControll = val;
+        
+        if(armImageUpdateRoutine != null)StopCoroutine(armImageUpdateRoutine);
+        
         if (haveArmControll)
         {
-            armControllRoutine = StartCoroutine(GripRoutine());
+            armImageUpdateRoutine = StartCoroutine(ImageUpdateRoutine(ImageSource.HAND, FOVH, 0,  Sphere.UVDir.UP, 0.1f));
+        }
+
+        if (!haveArmControll)
+        {
+            DestroyImageIfExist(ImageSource.HAND);
+        }
+
+        void DestroyImageIfExist(string source)
+        {
+            var sTrans = transform.Find(source);
+            if(!sTrans)return;
+
+            var renderer = sTrans.GetComponentInChildren<Renderer>();
+            var mat = renderer.material;
+            var tex = renderer.material.GetTexture("_BaseMap");
+            Destroy(tex);
+            Destroy(mat);
+            Destroy(sTrans.gameObject);
         }
     }
 
@@ -97,9 +130,10 @@ public class Spot : MonoBehaviour
         grip = val;
     }
 
-    public void ArmPos(Vector3 pos)
+    public void ArmTransform(Vector3 pos, Quaternion rot)
     {
         armPos = pos;
+        armRot = rot;
     }
 
     IEnumerator MoveRoutine()
@@ -199,6 +233,7 @@ public class Spot : MonoBehaviour
             
             if(imageTexture != null)Destroy(imageTexture);
             imageTexture = task.Result;
+            imageTexture.name = source;
             UpdateMaterial(imageTexture);
             
             long remainingMs = SEND_MS - watch.ElapsedMilliseconds;
@@ -213,6 +248,7 @@ public class Spot : MonoBehaviour
                 go.transform.SetParent(this.transform);
                 go.transform.localScale = Vector3.one * CAM_DISTANCE * scale;
                 go.transform.rotation = Quaternion.Euler(0, yawAngle, 0);
+                go.name = texture.name;
         
                 var filter = go.AddComponent<MeshFilter>();
                 float fovV = texture.height / (float)texture.width * fovH;
@@ -225,7 +261,7 @@ public class Spot : MonoBehaviour
             mat.SetTexture("_BaseMap", imageTexture);
         }
     }
-
+    
     IEnumerator StateUpdateRoutine()
     {
         int updateTime = 1000 / STATE_UPDATE_FREQUENCY;

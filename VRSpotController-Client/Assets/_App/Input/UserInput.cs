@@ -138,24 +138,6 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""ArmPos"",
-                    ""type"": ""Value"",
-                    ""id"": ""e7c3c5de-8e14-4fd6-8547-cae8e564084e"",
-                    ""expectedControlType"": ""Vector3"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                },
-                {
-                    ""name"": ""ArmRot"",
-                    ""type"": ""Value"",
-                    ""id"": ""ef676d6a-7273-42bf-a02b-6a87aec587d1"",
-                    ""expectedControlType"": ""Quaternion"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                },
-                {
                     ""name"": ""ArmControll"",
                     ""type"": ""Button"",
                     ""id"": ""74f2ea44-e721-46bb-a51f-f9e273cf8e84"",
@@ -317,83 +299,6 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Grip"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""3D Vector"",
-                    ""id"": ""debc0625-2d6c-4bf9-a551-49c46af94ad0"",
-                    ""path"": ""3DVector"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""ArmPos"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""up"",
-                    ""id"": ""71069c24-7b42-4d79-a55f-851f0464de62"",
-                    ""path"": ""<Keyboard>/u"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""ArmPos"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""down"",
-                    ""id"": ""2510cc11-6e0d-41b5-a888-9f2126c8c214"",
-                    ""path"": ""<Keyboard>/j"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""ArmPos"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""d71dca0b-0ca9-4f7c-b283-e8c399ad1240"",
-                    ""path"": ""<Keyboard>/h"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""ArmPos"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""2e0c1e7b-982b-4b59-9ea5-73c7f1df4dae"",
-                    ""path"": ""<Keyboard>/k"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""ArmPos"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""forward"",
-                    ""id"": ""5f7ef063-8f84-4aa8-8810-b3762d1c05c8"",
-                    ""path"": ""<Keyboard>/y"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""ArmPos"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""backward"",
-                    ""id"": ""11b0cf32-07d8-4a88-bc94-1729457b7eb4"",
-                    ""path"": ""<Keyboard>/i"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""ArmPos"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -574,8 +479,6 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
         m_Controll_Power = m_Controll.FindAction("Power", throwIfNotFound: true);
         m_Controll_Rotate = m_Controll.FindAction("Rotate", throwIfNotFound: true);
         m_Controll_Grip = m_Controll.FindAction("Grip", throwIfNotFound: true);
-        m_Controll_ArmPos = m_Controll.FindAction("ArmPos", throwIfNotFound: true);
-        m_Controll_ArmRot = m_Controll.FindAction("ArmRot", throwIfNotFound: true);
         m_Controll_ArmControll = m_Controll.FindAction("ArmControll", throwIfNotFound: true);
         // Status
         m_Status = asset.FindActionMap("Status", throwIfNotFound: true);
@@ -669,8 +572,6 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_Controll_Power;
     private readonly InputAction m_Controll_Rotate;
     private readonly InputAction m_Controll_Grip;
-    private readonly InputAction m_Controll_ArmPos;
-    private readonly InputAction m_Controll_ArmRot;
     private readonly InputAction m_Controll_ArmControll;
     /// <summary>
     /// Provides access to input actions defined in input action map "Controll".
@@ -703,14 +604,6 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Controll/Grip".
         /// </summary>
         public InputAction @Grip => m_Wrapper.m_Controll_Grip;
-        /// <summary>
-        /// Provides access to the underlying input action "Controll/ArmPos".
-        /// </summary>
-        public InputAction @ArmPos => m_Wrapper.m_Controll_ArmPos;
-        /// <summary>
-        /// Provides access to the underlying input action "Controll/ArmRot".
-        /// </summary>
-        public InputAction @ArmRot => m_Wrapper.m_Controll_ArmRot;
         /// <summary>
         /// Provides access to the underlying input action "Controll/ArmControll".
         /// </summary>
@@ -756,12 +649,6 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
             @Grip.started += instance.OnGrip;
             @Grip.performed += instance.OnGrip;
             @Grip.canceled += instance.OnGrip;
-            @ArmPos.started += instance.OnArmPos;
-            @ArmPos.performed += instance.OnArmPos;
-            @ArmPos.canceled += instance.OnArmPos;
-            @ArmRot.started += instance.OnArmRot;
-            @ArmRot.performed += instance.OnArmRot;
-            @ArmRot.canceled += instance.OnArmRot;
             @ArmControll.started += instance.OnArmControll;
             @ArmControll.performed += instance.OnArmControll;
             @ArmControll.canceled += instance.OnArmControll;
@@ -791,12 +678,6 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
             @Grip.started -= instance.OnGrip;
             @Grip.performed -= instance.OnGrip;
             @Grip.canceled -= instance.OnGrip;
-            @ArmPos.started -= instance.OnArmPos;
-            @ArmPos.performed -= instance.OnArmPos;
-            @ArmPos.canceled -= instance.OnArmPos;
-            @ArmRot.started -= instance.OnArmRot;
-            @ArmRot.performed -= instance.OnArmRot;
-            @ArmRot.canceled -= instance.OnArmRot;
             @ArmControll.started -= instance.OnArmControll;
             @ArmControll.performed -= instance.OnArmControll;
             @ArmControll.canceled -= instance.OnArmControll;
@@ -1004,20 +885,6 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnGrip(InputAction.CallbackContext context);
-        /// <summary>
-        /// Method invoked when associated input action "ArmPos" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnArmPos(InputAction.CallbackContext context);
-        /// <summary>
-        /// Method invoked when associated input action "ArmRot" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnArmRot(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "ArmControll" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
