@@ -64,7 +64,7 @@ class FakeSpot():
         return img
     
     def GetBattery(self):
-        return sin(time.time()*0.2)*0.5+0.5
+        return (int)(sin(time.time()*0.2)*0.5+0.5*100)
     
     def GetState(self) -> SpotState:
         state : SpotState = SpotState()
