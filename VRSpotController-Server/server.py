@@ -12,8 +12,14 @@ class Server:
         self.spot = FakeSpot() if debug else Spot()
 
     def printHostName(self):
-        hostname = socket.gethostname()
-        print("Hostname:", hostname)
+        try:
+            with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
+                s.connect(("8.8.8.8", 80))
+                local_ip = s.getsockname()[0]
+        except OSError:
+            local_ip = socket.gethostbyname(socket.gethostname())
+
+        print("Local IP:", local_ip)
 
 
     def hello(self,req:HelloRequest):

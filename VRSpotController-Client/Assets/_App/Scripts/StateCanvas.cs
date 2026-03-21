@@ -34,6 +34,7 @@ public class StateCanvas : MonoBehaviour
     private void Update()
     {
         var state = Spot.instance.state;
+        if(state == null)return;
         
         batteryValue.text = state.battery.ToString().Color(Color.Lerp(Color.red, Color.green, state.battery / 100f));
         powerValue.text = state.power.ToString().Color(powerColors[state.power]);

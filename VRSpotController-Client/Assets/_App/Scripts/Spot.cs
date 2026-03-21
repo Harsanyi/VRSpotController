@@ -56,6 +56,8 @@ public class Spot : MonoBehaviour
 
     private void Update()
     {
+        if(state == null)return;
+        
         this.transform.rotation = Quaternion.Euler(-state.rot.eulerAngles.x, 0f, 0f);
         if (haveArmControll)
         {

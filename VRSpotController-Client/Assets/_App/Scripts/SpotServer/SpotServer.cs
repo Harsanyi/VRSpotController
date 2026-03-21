@@ -1,14 +1,10 @@
 using System;
-using System.Diagnostics;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using TreeEditor;
 using UnityEngine;
 using UnityEngine.Networking;
 using Debug = UnityEngine.Debug;
-using Ping = System.Net.NetworkInformation.Ping;
-using UnityEngine.Events;
 
 public class SpotServer
 {
