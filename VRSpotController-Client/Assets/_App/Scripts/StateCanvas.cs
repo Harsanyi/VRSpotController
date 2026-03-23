@@ -10,7 +10,6 @@ public class StateCanvas : MonoBehaviour
     [SerializeField] private TextMeshProUGUI standingValue;
     [SerializeField] private TextMeshProUGUI positionValue;
     [SerializeField] private TextMeshProUGUI rotationValue;
-    [SerializeField] private TextMeshProUGUI armCountValue;
 
     static Dictionary<SpotState.Power, Color> powerColors = new()
     {
@@ -41,6 +40,5 @@ public class StateCanvas : MonoBehaviour
         standingValue.text = state.pose.ToString().Color(poseColors[state.pose]);
         positionValue.text = state.pos.ToString("n2");
         rotationValue.text = state.rot.eulerAngles.ToString("n2");
-        
     }
 }
