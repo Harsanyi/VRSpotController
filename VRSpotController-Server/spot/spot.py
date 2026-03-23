@@ -48,6 +48,7 @@ from bosdyn.client.frame_helpers import (
     VISION_FRAME_NAME,
     get_a_tform_b
 )
+import threading
 
 class Spot():
     SPOT_IP = "***REMOVED***"
@@ -60,6 +61,8 @@ class Spot():
     lease_alive = None
     timeout = 10
     lease_cl = None
+    autoStowTime = 0.5
+    stowTimer = None
     
     def GetRobot(self):
         if self.robot != None:
@@ -283,10 +286,14 @@ class Spot():
         except Exception as e:
             print(f"Pitch error: {e}")
 
+    def Stow(self):
+        cmd_cl = self.GetCommandClient()
+        cmd_cl.robot_command(RobotCommandBuilder.arm_stow_command())
+
     def SetArm(self, pos:vector3, rot:vector4):
         cmd_cl = self.GetCommandClient()
         
-        if pos.x == 0 and pos.y == 0 and pos.y == 0:
+        if pos.x == 0 and pos.y == 0 and pos.z == 0:
             return cmd_cl.robot_command(RobotCommandBuilder.arm_stow_command())
 
         frame_map = {
@@ -295,13 +302,20 @@ class Spot():
             "vision": VISION_FRAME_NAME
          }
         frame_name = frame_map.get("body", GRAV_ALIGNED_BODY_FRAME_NAME)
+        dPos = vector3(0.5529209614434938, -0.001416130391380874, 0.2639482580652256)
+        pos = vector3(pos.x + dPos.x, pos.y + dPos.y, pos.z+dPos.z)
         cmd = RobotCommandBuilder.arm_pose_command(pos.x, pos.y, pos.z, rot.w, rot.x, rot.y, rot.z, frame_name, 0.5)
 
         try:
+            if self.stowTimer is not None:
+                self.stowTimer.cancel()
+            self.stowTimer = threading.Timer(self.autoStowTime, self.Stow)
+            self.stowTimer.start()
+
             cmd_cl.robot_command(cmd)
         except Exception as e:
             print(e)
-            cmd_cl.robot_command(RobotCommandBuilder.arm_stow_command())
+            self.Stow()
 
 class ImgSource:
     BACK = "back_fisheye_image"

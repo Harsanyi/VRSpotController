@@ -7,11 +7,9 @@ using Debug = UnityEngine.Debug;
 
 public class Spot : MonoBehaviour
 {
-    private const int MOVE_UPDATE_FREQUENCY = 10;
-    private const int IMAGE_UPDATE_FREQUENCY = 20;
-    private const int PITCH_UPDATE_FREQUENCY = 10;
+    private const int MOVEMENT_UPDATE_FREQ = 10;
+    private const int IMAGE_UPDATE_FREQUENCY = 10;
     private const int IMAGE_ANGLE_RESOLUTION = 10;
-    private const int GRIP_UPDATE_FREQUENCY = 20;
     private const float CAM_DISTANCE = 500;
     private const int STATE_UPDATE_FREQUENCY = 10;
     const float FOVH = 72f;
@@ -27,8 +25,11 @@ public class Spot : MonoBehaviour
     public SpotState state { get; private set; }
     
     private float grip;
-    private Vector3 armPos;
-    private Quaternion armRot;
+    private Vector3 userHandPos;
+    private Vector3 userHandLocalPos;
+    private Quaternion userHandRot;
+    private Quaternion userHandRotLocal;
+    
     private bool haveArmControll = false;
     private Coroutine armControllRoutine;
     private Coroutine armImageUpdateRoutine;
@@ -71,8 +72,8 @@ public class Spot : MonoBehaviour
         if(!imgTrans)return;
 
         if (imgTrans.localScale.x != 1f) imgTrans.localScale = Vector3.one;
-        imgTrans.position = armPos;
-        imgTrans.rotation = armRot;
+        imgTrans.position = userHandPos;
+        imgTrans.rotation = userHandRot;
     }
 
     public void Stand()
@@ -102,11 +103,13 @@ public class Spot : MonoBehaviour
         
         if(armImageUpdateRoutine != null)StopCoroutine(armImageUpdateRoutine);
         if(gripUpdateRoutine != null)StopCoroutine(gripUpdateRoutine);
+        if(armControllRoutine != null)StopCoroutine(armControllRoutine);
         
         if (haveArmControll)
         {
             armImageUpdateRoutine = StartCoroutine(ImageUpdateRoutine(ImageSource.HAND, FOVH, 0,  Sphere.UVDir.UP, 0.1f));
             gripUpdateRoutine = StartCoroutine(GripRoutine());
+            armControllRoutine = StartCoroutine(ArmPosRoutine());
         }
 
         if (!haveArmControll)
@@ -133,10 +136,12 @@ public class Spot : MonoBehaviour
         grip = val;
     }
 
-    public void ArmTransform(Vector3 pos, Quaternion rot)
+    public void UserHandTransform(Vector3 pos, Quaternion rot, Vector3 locPos, Quaternion locRot)
     {
-        armPos = pos;
-        armRot = rot;
+        userHandPos = pos;
+        userHandRot = rot;
+        userHandLocalPos = locPos;
+        userHandRotLocal = locRot;
     }
 
     IEnumerator MoveRoutine()
@@ -144,7 +149,7 @@ public class Spot : MonoBehaviour
         Vector2 lastMove = default;
         float lastYaw = 0;
         Stopwatch watch = Stopwatch.StartNew();
-        const int SEND_MS = 1000 / MOVE_UPDATE_FREQUENCY;
+        const int SEND_MS = 1000 / MOVEMENT_UPDATE_FREQ;
         while (Application.isPlaying)
         {
             watch.Restart();
@@ -162,17 +167,20 @@ public class Spot : MonoBehaviour
 
     IEnumerator ArmPosRoutine()
     {
-        Vector3 lastPos = default;
+        Vector3 startpos = userHandLocalPos;
+        Quaternion startRot = userHandRotLocal;
+        
         Stopwatch watch = Stopwatch.StartNew();
-        const int SEND_MS = 1000 / MOVE_UPDATE_FREQUENCY;
+        const int SEND_MS = 1000 / MOVEMENT_UPDATE_FREQ;
+        
         while (Application.isPlaying)
         {
             watch.Restart();
-            if (armPos != lastPos)
-            {
-                server.ArmPos(armPos);
-                lastPos = armPos;
-            }
+            
+            Vector3 deltaPos = userHandLocalPos - startpos;
+            Quaternion deltaRot = Quaternion.Inverse(startRot) * userHandRotLocal;
+            
+            server.ArmTransform(deltaPos, deltaRot);
 
             long remaningMs = SEND_MS - watch.ElapsedMilliseconds;
             if(remaningMs > 0)yield return new WaitForSeconds(remaningMs / 1000f);
@@ -183,7 +191,7 @@ public class Spot : MonoBehaviour
     {
         float lastPitch = 0;
         Stopwatch watch = Stopwatch.StartNew();
-        const int SEND_MS = 1000 / PITCH_UPDATE_FREQUENCY;
+        const int SEND_MS = 1000 / MOVEMENT_UPDATE_FREQ;
         while (Application.isPlaying)
         {
             watch.Restart();
@@ -202,7 +210,7 @@ public class Spot : MonoBehaviour
     {
         float lastGrip = 0;
         Stopwatch watch = Stopwatch.StartNew();
-        const int SEND_MS = 1000 / GRIP_UPDATE_FREQUENCY;
+        const int SEND_MS = 1000 / MOVEMENT_UPDATE_FREQ;
         while (Application.isPlaying)
         {
             watch.Restart();

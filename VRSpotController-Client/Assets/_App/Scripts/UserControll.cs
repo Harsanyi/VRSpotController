@@ -46,7 +46,7 @@ public class UserControll : MonoBehaviour
 
     void HandleArm()
     {
-        Spot.instance.ArmTransform(rightController.position, rightController.rotation);
+        Spot.instance.UserHandTransform(rightController.position, rightController.rotation, rightController.localPosition, rightController.localRotation);
     }
 
     void HandleMovement()

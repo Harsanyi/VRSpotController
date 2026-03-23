@@ -60,11 +60,10 @@ public class SpotServer
         }
     }
     
-    public async void ArmPos(Vector3 pos)
+    public async void ArmTransform(Vector3 pos, Quaternion rot)
     {
         try
         {
-            var rot = Quaternion.Euler(0, 0, pos.x < 0 ? 90 : 0);
             var req = new ArmRequest(pos.z, -pos.x, pos.y, -rot.z, rot.x, -rot.y, rot.w);
             var resp = await SendRequest<Response>(End.ARM, Methode.POST, req);
             
