@@ -1,46 +1,23 @@
-import argparse
 import os
-import sys
+import threading
 import time
-from bosdyn.api import image_pb2
 
 import bosdyn.client
 import bosdyn.client.lease
-import bosdyn.client.util
-import bosdyn.geometry
-from bosdyn.api import trajectory_pb2
-from bosdyn.api.spot import robot_command_pb2 as spot_command_pb2
-from bosdyn.client import math_helpers
-from bosdyn.client.frame_helpers import GRAV_ALIGNED_BODY_FRAME_NAME, ODOM_FRAME_NAME, get_a_tform_b
-from bosdyn.client.image import ImageClient
-from bosdyn.client.robot_command import RobotCommandBuilder, RobotCommandClient, blocking_stand
-from bosdyn.client.robot_state import RobotStateClient
-from bosdyn.util import seconds_to_duration
-from bosdyn.client.util import authenticate
-from bosdyn.api.spot import robot_command_pb2 as spot_command_pb2
-from bosdyn.client.robot_command import RobotCommandBuilder
-
-import bosdyn.client
-from bosdyn.client.image import ImageClient
 from bosdyn.api import image_pb2
-import numpy as np
-#import cv2
+from bosdyn.api.spot import robot_command_pb2 as spot_command_pb2
+from bosdyn.client.image import ImageClient
 from bosdyn.client.robot_command import (
     RobotCommandClient,
     RobotCommandBuilder,
     blocking_stand,
     blocking_sit
 )
-import bosdyn.client.lease
 from bosdyn.client.lease import LeaseKeepAlive
 from bosdyn.client.power import PowerClient, power_on_motors
-from bosdyn.client.robot_command import RobotCommandBuilder
-from bosdyn.util import seconds_to_duration
-import time
-from vector import *
-from bosdyn.api import robot_state_pb2
-from spot.spotState import *
-from bosdyn.api import power_pb2
+from bosdyn.client.robot_state import RobotStateClient
+from vector import vector2, vector3, vector4
+from spot.spotState import SpotState
 from bosdyn.geometry import EulerZXY
 from bosdyn.client.frame_helpers import (
     GRAV_ALIGNED_BODY_FRAME_NAME,
@@ -48,13 +25,17 @@ from bosdyn.client.frame_helpers import (
     VISION_FRAME_NAME,
     get_a_tform_b
 )
-import threading
 
 class Spot():
-    SPOT_IP = "***REMOVED***"
-    #SPOT_IP = "***REMOVED***"
-    USERNAME = "***REMOVED***"
-    PASSWORD = "***REMOVED***"
+    def __init__(self):
+        required = ("SPOT_IP", "SPOT_USERNAME", "SPOT_PASSWORD")
+        values = {name: os.getenv(name) for name in required}
+        missing = [name for name, value in values.items() if not value]
+        if missing:
+            raise RuntimeError("Real Spot mode requires environment variables: " + ", ".join(missing))
+        self.SPOT_IP = values["SPOT_IP"]
+        self.USERNAME = values["SPOT_USERNAME"]
+        self.PASSWORD = values["SPOT_PASSWORD"]
 
     robot = None
     lease = None
@@ -72,7 +53,7 @@ class Spot():
         self.robot = sdk.create_robot(self.SPOT_IP)
         self.robot.authenticate(self.USERNAME, self.PASSWORD)
         self.robot.time_sync.wait_for_sync()
-        print("Robot Loggged in.")
+        print("Robot logged in.")
         return self.robot
 
     def GetLease(self):
@@ -334,6 +315,3 @@ class ImgSource:
         LEFT: 0,
         RIGHT: 180
     }
-
-
-    
