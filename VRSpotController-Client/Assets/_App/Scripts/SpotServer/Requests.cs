@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Request
 {
-    public virtual string ToString()
+    public override string ToString()
     {
         return JsonUtility.ToJson(this);
     }

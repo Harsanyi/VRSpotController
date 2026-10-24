@@ -30,8 +30,8 @@ public class Spot : MonoBehaviour
     private Quaternion userHandRot;
     private Quaternion userHandRotLocal;
     
-    private bool haveArmControll = false;
-    private Coroutine armControllRoutine;
+    private bool hasArmControl = false;
+    private Coroutine armControlRoutine;
     private Coroutine armImageUpdateRoutine;
     private Coroutine gripUpdateRoutine;
     
@@ -60,7 +60,7 @@ public class Spot : MonoBehaviour
         if(state == null)return;
         
         this.transform.rotation = Quaternion.Euler(-state.rot.eulerAngles.x, 0f, 0f);
-        if (haveArmControll)
+        if (hasArmControl)
         {
             UpdateArmImagePosition();
         }
@@ -96,23 +96,23 @@ public class Spot : MonoBehaviour
         rotate = rot;
     }
 
-    public void SetArmControll(bool val)
+    public void SetArmControl(bool val)
     {
-        if(haveArmControll == val)return;
-        haveArmControll = val;
+        if(hasArmControl == val)return;
+        hasArmControl = val;
         
         if(armImageUpdateRoutine != null)StopCoroutine(armImageUpdateRoutine);
         if(gripUpdateRoutine != null)StopCoroutine(gripUpdateRoutine);
-        if(armControllRoutine != null)StopCoroutine(armControllRoutine);
+        if(armControlRoutine != null)StopCoroutine(armControlRoutine);
         
-        if (haveArmControll)
+        if (hasArmControl)
         {
             armImageUpdateRoutine = StartCoroutine(ImageUpdateRoutine(ImageSource.HAND, FOVH, 0,  Sphere.UVDir.UP, 0.1f));
             gripUpdateRoutine = StartCoroutine(GripRoutine());
-            armControllRoutine = StartCoroutine(ArmPosRoutine());
+            armControlRoutine = StartCoroutine(ArmPosRoutine());
         }
 
-        if (!haveArmControll)
+        if (!hasArmControl)
         {
             DestroyImageIfExist(ImageSource.HAND);
         }
@@ -160,8 +160,8 @@ public class Spot : MonoBehaviour
                 lastYaw = rotate.x;
             }
 
-            long remaningMs = SEND_MS - watch.ElapsedMilliseconds;
-            if(remaningMs > 0)yield return new WaitForSeconds(remaningMs / 1000f);
+            long remainingMs = SEND_MS - watch.ElapsedMilliseconds;
+            if(remainingMs > 0)yield return new WaitForSeconds(remainingMs / 1000f);
         }
     }
 
@@ -182,8 +182,8 @@ public class Spot : MonoBehaviour
             
             server.ArmTransform(deltaPos, deltaRot);
 
-            long remaningMs = SEND_MS - watch.ElapsedMilliseconds;
-            if(remaningMs > 0)yield return new WaitForSeconds(remaningMs / 1000f);
+            long remainingMs = SEND_MS - watch.ElapsedMilliseconds;
+            if(remainingMs > 0)yield return new WaitForSeconds(remainingMs / 1000f);
         }
     }
 
@@ -201,8 +201,8 @@ public class Spot : MonoBehaviour
                 lastPitch = rotate.y;
             }
 
-            long remaningMs = SEND_MS - watch.ElapsedMilliseconds;
-            if(remaningMs > 0)yield return new WaitForSeconds(remaningMs / 1000f);
+            long remainingMs = SEND_MS - watch.ElapsedMilliseconds;
+            if(remainingMs > 0)yield return new WaitForSeconds(remainingMs / 1000f);
         }
     }
 
@@ -220,8 +220,8 @@ public class Spot : MonoBehaviour
                 lastGrip = grip;
             }
             
-            long remaningMs = SEND_MS - watch.ElapsedMilliseconds;
-            if(remaningMs > 0)yield return new WaitForSeconds(remaningMs / 1000f);
+            long remainingMs = SEND_MS - watch.ElapsedMilliseconds;
+            if(remainingMs > 0)yield return new WaitForSeconds(remainingMs / 1000f);
         }
     }
 

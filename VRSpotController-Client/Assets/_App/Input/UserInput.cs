@@ -89,7 +89,7 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
     ""name"": ""UserInput"",
     ""maps"": [
         {
-            ""name"": ""Controll"",
+            ""name"": ""Control"",
             ""id"": ""4848c849-3c77-4444-ad57-8dfa9f59c8a0"",
             ""actions"": [
                 {
@@ -138,7 +138,7 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""ArmControll"",
+                    ""name"": ""ArmControl"",
                     ""type"": ""Button"",
                     ""id"": ""74f2ea44-e721-46bb-a51f-f9e273cf8e84"",
                     ""expectedControlType"": """",
@@ -386,7 +386,7 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
                     ""interactions"": ""Press(behavior=2)"",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""ArmControll"",
+                    ""action"": ""ArmControl"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -483,14 +483,14 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
     ],
     ""controlSchemes"": []
 }");
-        // Controll
-        m_Controll = asset.FindActionMap("Controll", throwIfNotFound: true);
-        m_Controll_Move = m_Controll.FindAction("Move", throwIfNotFound: true);
-        m_Controll_Stand = m_Controll.FindAction("Stand", throwIfNotFound: true);
-        m_Controll_Power = m_Controll.FindAction("Power", throwIfNotFound: true);
-        m_Controll_Rotate = m_Controll.FindAction("Rotate", throwIfNotFound: true);
-        m_Controll_Grip = m_Controll.FindAction("Grip", throwIfNotFound: true);
-        m_Controll_ArmControll = m_Controll.FindAction("ArmControll", throwIfNotFound: true);
+        // Control
+        m_Control = asset.FindActionMap("Control", throwIfNotFound: true);
+        m_Control_Move = m_Control.FindAction("Move", throwIfNotFound: true);
+        m_Control_Stand = m_Control.FindAction("Stand", throwIfNotFound: true);
+        m_Control_Power = m_Control.FindAction("Power", throwIfNotFound: true);
+        m_Control_Rotate = m_Control.FindAction("Rotate", throwIfNotFound: true);
+        m_Control_Grip = m_Control.FindAction("Grip", throwIfNotFound: true);
+        m_Control_ArmControl = m_Control.FindAction("ArmControl", throwIfNotFound: true);
         // Status
         m_Status = asset.FindActionMap("Status", throwIfNotFound: true);
         m_Status_LeftControllerPos = m_Status.FindAction("LeftControllerPos", throwIfNotFound: true);
@@ -501,7 +501,7 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
 
     ~@UserInput()
     {
-        UnityEngine.Debug.Assert(!m_Controll.enabled, "This will cause a leak and performance issues, UserInput.Controll.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_Control.enabled, "This will cause a leak and performance issues, UserInput.Control.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_Status.enabled, "This will cause a leak and performance issues, UserInput.Status.Disable() has not been called.");
     }
 
@@ -575,54 +575,54 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
         return asset.FindBinding(bindingMask, out action);
     }
 
-    // Controll
-    private readonly InputActionMap m_Controll;
-    private List<IControllActions> m_ControllActionsCallbackInterfaces = new List<IControllActions>();
-    private readonly InputAction m_Controll_Move;
-    private readonly InputAction m_Controll_Stand;
-    private readonly InputAction m_Controll_Power;
-    private readonly InputAction m_Controll_Rotate;
-    private readonly InputAction m_Controll_Grip;
-    private readonly InputAction m_Controll_ArmControll;
+    // Control
+    private readonly InputActionMap m_Control;
+    private List<IControlActions> m_ControlActionsCallbackInterfaces = new List<IControlActions>();
+    private readonly InputAction m_Control_Move;
+    private readonly InputAction m_Control_Stand;
+    private readonly InputAction m_Control_Power;
+    private readonly InputAction m_Control_Rotate;
+    private readonly InputAction m_Control_Grip;
+    private readonly InputAction m_Control_ArmControl;
     /// <summary>
-    /// Provides access to input actions defined in input action map "Controll".
+    /// Provides access to input actions defined in input action map "Control".
     /// </summary>
-    public struct ControllActions
+    public struct ControlActions
     {
         private @UserInput m_Wrapper;
 
         /// <summary>
         /// Construct a new instance of the input action map wrapper class.
         /// </summary>
-        public ControllActions(@UserInput wrapper) { m_Wrapper = wrapper; }
+        public ControlActions(@UserInput wrapper) { m_Wrapper = wrapper; }
         /// <summary>
-        /// Provides access to the underlying input action "Controll/Move".
+        /// Provides access to the underlying input action "Control/Move".
         /// </summary>
-        public InputAction @Move => m_Wrapper.m_Controll_Move;
+        public InputAction @Move => m_Wrapper.m_Control_Move;
         /// <summary>
-        /// Provides access to the underlying input action "Controll/Stand".
+        /// Provides access to the underlying input action "Control/Stand".
         /// </summary>
-        public InputAction @Stand => m_Wrapper.m_Controll_Stand;
+        public InputAction @Stand => m_Wrapper.m_Control_Stand;
         /// <summary>
-        /// Provides access to the underlying input action "Controll/Power".
+        /// Provides access to the underlying input action "Control/Power".
         /// </summary>
-        public InputAction @Power => m_Wrapper.m_Controll_Power;
+        public InputAction @Power => m_Wrapper.m_Control_Power;
         /// <summary>
-        /// Provides access to the underlying input action "Controll/Rotate".
+        /// Provides access to the underlying input action "Control/Rotate".
         /// </summary>
-        public InputAction @Rotate => m_Wrapper.m_Controll_Rotate;
+        public InputAction @Rotate => m_Wrapper.m_Control_Rotate;
         /// <summary>
-        /// Provides access to the underlying input action "Controll/Grip".
+        /// Provides access to the underlying input action "Control/Grip".
         /// </summary>
-        public InputAction @Grip => m_Wrapper.m_Controll_Grip;
+        public InputAction @Grip => m_Wrapper.m_Control_Grip;
         /// <summary>
-        /// Provides access to the underlying input action "Controll/ArmControll".
+        /// Provides access to the underlying input action "Control/ArmControl".
         /// </summary>
-        public InputAction @ArmControll => m_Wrapper.m_Controll_ArmControll;
+        public InputAction @ArmControl => m_Wrapper.m_Control_ArmControl;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
-        public InputActionMap Get() { return m_Wrapper.m_Controll; }
+        public InputActionMap Get() { return m_Wrapper.m_Control; }
         /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
         public void Enable() { Get().Enable(); }
         /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
@@ -630,9 +630,9 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
         /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
         public bool enabled => Get().enabled;
         /// <summary>
-        /// Implicitly converts an <see ref="ControllActions" /> to an <see ref="InputActionMap" /> instance.
+        /// Implicitly converts an <see ref="ControlActions" /> to an <see ref="InputActionMap" /> instance.
         /// </summary>
-        public static implicit operator InputActionMap(ControllActions set) { return set.Get(); }
+        public static implicit operator InputActionMap(ControlActions set) { return set.Get(); }
         /// <summary>
         /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
         /// </summary>
@@ -640,11 +640,11 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
         /// <remarks>
         /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
         /// </remarks>
-        /// <seealso cref="ControllActions" />
-        public void AddCallbacks(IControllActions instance)
+        /// <seealso cref="ControlActions" />
+        public void AddCallbacks(IControlActions instance)
         {
-            if (instance == null || m_Wrapper.m_ControllActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_ControllActionsCallbackInterfaces.Add(instance);
+            if (instance == null || m_Wrapper.m_ControlActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_ControlActionsCallbackInterfaces.Add(instance);
             @Move.started += instance.OnMove;
             @Move.performed += instance.OnMove;
             @Move.canceled += instance.OnMove;
@@ -660,9 +660,9 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
             @Grip.started += instance.OnGrip;
             @Grip.performed += instance.OnGrip;
             @Grip.canceled += instance.OnGrip;
-            @ArmControll.started += instance.OnArmControll;
-            @ArmControll.performed += instance.OnArmControll;
-            @ArmControll.canceled += instance.OnArmControll;
+            @ArmControl.started += instance.OnArmControl;
+            @ArmControl.performed += instance.OnArmControl;
+            @ArmControl.canceled += instance.OnArmControl;
         }
 
         /// <summary>
@@ -671,8 +671,8 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
         /// <remarks>
         /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
         /// </remarks>
-        /// <seealso cref="ControllActions" />
-        private void UnregisterCallbacks(IControllActions instance)
+        /// <seealso cref="ControlActions" />
+        private void UnregisterCallbacks(IControlActions instance)
         {
             @Move.started -= instance.OnMove;
             @Move.performed -= instance.OnMove;
@@ -689,18 +689,18 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
             @Grip.started -= instance.OnGrip;
             @Grip.performed -= instance.OnGrip;
             @Grip.canceled -= instance.OnGrip;
-            @ArmControll.started -= instance.OnArmControll;
-            @ArmControll.performed -= instance.OnArmControll;
-            @ArmControll.canceled -= instance.OnArmControll;
+            @ArmControl.started -= instance.OnArmControl;
+            @ArmControl.performed -= instance.OnArmControl;
+            @ArmControl.canceled -= instance.OnArmControl;
         }
 
         /// <summary>
-        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="ControllActions.UnregisterCallbacks(IControllActions)" />.
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="ControlActions.UnregisterCallbacks(IControlActions)" />.
         /// </summary>
-        /// <seealso cref="ControllActions.UnregisterCallbacks(IControllActions)" />
-        public void RemoveCallbacks(IControllActions instance)
+        /// <seealso cref="ControlActions.UnregisterCallbacks(IControlActions)" />
+        public void RemoveCallbacks(IControlActions instance)
         {
-            if (m_Wrapper.m_ControllActionsCallbackInterfaces.Remove(instance))
+            if (m_Wrapper.m_ControlActionsCallbackInterfaces.Remove(instance))
                 UnregisterCallbacks(instance);
         }
 
@@ -710,21 +710,21 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
         /// <remarks>
         /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
         /// </remarks>
-        /// <seealso cref="ControllActions.AddCallbacks(IControllActions)" />
-        /// <seealso cref="ControllActions.RemoveCallbacks(IControllActions)" />
-        /// <seealso cref="ControllActions.UnregisterCallbacks(IControllActions)" />
-        public void SetCallbacks(IControllActions instance)
+        /// <seealso cref="ControlActions.AddCallbacks(IControlActions)" />
+        /// <seealso cref="ControlActions.RemoveCallbacks(IControlActions)" />
+        /// <seealso cref="ControlActions.UnregisterCallbacks(IControlActions)" />
+        public void SetCallbacks(IControlActions instance)
         {
-            foreach (var item in m_Wrapper.m_ControllActionsCallbackInterfaces)
+            foreach (var item in m_Wrapper.m_ControlActionsCallbackInterfaces)
                 UnregisterCallbacks(item);
-            m_Wrapper.m_ControllActionsCallbackInterfaces.Clear();
+            m_Wrapper.m_ControlActionsCallbackInterfaces.Clear();
             AddCallbacks(instance);
         }
     }
     /// <summary>
-    /// Provides a new <see cref="ControllActions" /> instance referencing this action map.
+    /// Provides a new <see cref="ControlActions" /> instance referencing this action map.
     /// </summary>
-    public ControllActions @Controll => new ControllActions(this);
+    public ControlActions @Control => new ControlActions(this);
 
     // Status
     private readonly InputActionMap m_Status;
@@ -855,11 +855,11 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
     /// </summary>
     public StatusActions @Status => new StatusActions(this);
     /// <summary>
-    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Controll" which allows adding and removing callbacks.
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Control" which allows adding and removing callbacks.
     /// </summary>
-    /// <seealso cref="ControllActions.AddCallbacks(IControllActions)" />
-    /// <seealso cref="ControllActions.RemoveCallbacks(IControllActions)" />
-    public interface IControllActions
+    /// <seealso cref="ControlActions.AddCallbacks(IControlActions)" />
+    /// <seealso cref="ControlActions.RemoveCallbacks(IControlActions)" />
+    public interface IControlActions
     {
         /// <summary>
         /// Method invoked when associated input action "Move" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
@@ -897,12 +897,12 @@ public partial class @UserInput: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnGrip(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "ArmControll" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "ArmControl" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnArmControll(InputAction.CallbackContext context);
+        void OnArmControl(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Status" which allows adding and removing callbacks.

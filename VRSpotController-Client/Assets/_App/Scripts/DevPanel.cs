@@ -17,7 +17,7 @@ public class DevPanel : MonoBehaviour
 
     public void ServerCheck()
     {
-        new SpotServer().IsAvaiable();
+        new SpotServer().IsAvailable();
     }
 
     public void SayHello()

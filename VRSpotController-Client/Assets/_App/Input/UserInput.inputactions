@@ -3,7 +3,7 @@
     "name": "UserInput",
     "maps": [
         {
-            "name": "Controll",
+            "name": "Control",
             "id": "4848c849-3c77-4444-ad57-8dfa9f59c8a0",
             "actions": [
                 {
@@ -52,7 +52,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "ArmControll",
+                    "name": "ArmControl",
                     "type": "Button",
                     "id": "74f2ea44-e721-46bb-a51f-f9e273cf8e84",
                     "expectedControlType": "",
@@ -300,7 +300,7 @@
                     "interactions": "Press(behavior=2)",
                     "processors": "",
                     "groups": "",
-                    "action": "ArmControll",
+                    "action": "ArmControl",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

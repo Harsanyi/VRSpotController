@@ -77,7 +77,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 02ad96302181e0f419bc6f19895050e7, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UserControll
+  m_EditorClassIdentifier: Assembly-CSharp::UserControl
   leftController: {fileID: 677748946102377785}
   rightController: {fileID: 5038127575130865697}
 --- !u!1 &6827832055897064383

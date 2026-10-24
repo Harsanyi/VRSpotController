@@ -13,7 +13,7 @@ public class SpotServer
     public bool isStanding { get; private set; } = false;
     public bool isPoweredOn { get; private set; } = false;
     
-    public async void IsAvaiable()
+    public async void IsAvailable()
     {
         try
         {
@@ -35,7 +35,7 @@ public class SpotServer
             Debug.Log("Say Hello");
 
             var req = new HelloRequest("Unity Client");
-            var resp = await SendRequest<Response>(End.HELLO, Methode.POST, req);
+            var resp = await SendRequest<Response>(End.HELLO, RequestMethod.POST, req);
             
             Debug.Log(resp.message);
         }
@@ -50,7 +50,7 @@ public class SpotServer
         try
         {
             var req = new MoveRequest(new Vector2(move.y, -move.x), -yaw);
-            var resp = await SendRequest<Response>(End.MOVE, Methode.POST, req);
+            var resp = await SendRequest<Response>(End.MOVE, RequestMethod.POST, req);
             
             if(!resp.success)throw new Exception(resp.message);
         }
@@ -65,7 +65,7 @@ public class SpotServer
         try
         {
             var req = new ArmRequest(pos.z, -pos.x, pos.y, -rot.z, rot.x, -rot.y, rot.w);
-            var resp = await SendRequest<Response>(End.ARM, Methode.POST, req);
+            var resp = await SendRequest<Response>(End.ARM, RequestMethod.POST, req);
             
             if(!resp.success)throw new Exception(resp.message);
         }
@@ -80,7 +80,7 @@ public class SpotServer
         try
         {
             var req = new PitchRequest(pitch);
-            var resp = await SendRequest<Response>(End.PITCH, Methode.POST, req);
+            var resp = await SendRequest<Response>(End.PITCH, RequestMethod.POST, req);
             
             if(!resp.success)throw new Exception(resp.message);
         }
@@ -95,7 +95,7 @@ public class SpotServer
         try
         {
             var req = new GripRequest(grip);
-            var resp = await SendRequest<Response>(End.GRIP, Methode.POST, req);
+            var resp = await SendRequest<Response>(End.GRIP, RequestMethod.POST, req);
             
             if(!resp.success)throw new Exception(resp.message);
         }
@@ -109,7 +109,7 @@ public class SpotServer
     {
         Debug.Log("Set Standing:"+standing.ToString());
         var req = new StandRequest(standing);
-        var resp = await SendRequest<Response>(End.STAND, Methode.POST, req);
+        var resp = await SendRequest<Response>(End.STAND, RequestMethod.POST, req);
 
         if (resp.success)
         {
@@ -126,7 +126,7 @@ public class SpotServer
     {
         Debug.Log("Set Power On:"+powerOn.ToString());
         var req = new PowerOnRequest(powerOn);
-        var resp = await SendRequest<Response>(End.POWER, Methode.POST, req);
+        var resp = await SendRequest<Response>(End.POWER, RequestMethod.POST, req);
         
         if (resp.success)
         {
@@ -139,13 +139,13 @@ public class SpotServer
         }
     }
 
-    public async Task<Response> SendRequest<T>(string end, string methode, Request request) where T : Response
+    public async Task<Response> SendRequest<T>(string end, string method, Request request) where T : Response
     {
         try
         {
             string address = Config.loaded.serverAddress + end;
             var req = new UnityWebRequest(address);
-            req.method = methode;
+            req.method = method;
             req.timeout = TIMEOUT;
             req.downloadHandler = new DownloadHandlerBuffer();
 
@@ -185,16 +185,16 @@ public class SpotServer
     public async Task<Texture2D> GetImage(string source)
     {
         var req = new ImageRequest(source);
-        return await SendImageRequest(End.IMAGE, Methode.POST, req);
+        return await SendImageRequest(End.IMAGE, RequestMethod.POST, req);
     }
 
-    public async Task<Texture2D> SendImageRequest(string end, string methode, ImageRequest request)
+    public async Task<Texture2D> SendImageRequest(string end, string method, ImageRequest request)
     {
         try
         {
             string address = Config.loaded.serverAddress + end;
             var req = new UnityWebRequest(address);
-            req.method = methode;
+            req.method = method;
             req.timeout = TIMEOUT;
             req.downloadHandler = new DownloadHandlerBuffer();
 
@@ -227,12 +227,12 @@ public class SpotServer
     public async Task<SpotState> GetState()
     {
         var req = new Request();
-        var resp = await SendRequest<StateResponse>(End.STATE, Methode.POST, req) as StateResponse;
+        var resp = await SendRequest<StateResponse>(End.STATE, RequestMethod.POST, req) as StateResponse;
         return resp.state;
     }
 }
 
-public class Methode
+public class RequestMethod
 {
     public const string POST = "POST";
 }

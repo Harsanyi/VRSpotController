@@ -1,10 +1,8 @@
-using System;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
 
-public class UserControll : MonoBehaviour
+public class UserControl : MonoBehaviour
 {
     private UserInput input;
     
@@ -14,13 +12,13 @@ public class UserControll : MonoBehaviour
     private void Start()
     {
         input = new UserInput();
-        input.Controll.Enable();
+        input.Control.Enable();
         input.Status.Enable();
 
-        input.Controll.Stand.performed += OnStandPressed;
-        input.Controll.Power.performed += OnPowerOnPressed;
-        input.Controll.ArmControll.started += OnBeginArmControll;
-        input.Controll.ArmControll.canceled += OnEndArmControll;
+        input.Control.Stand.performed += OnStandPressed;
+        input.Control.Power.performed += OnPowerOnPressed;
+        input.Control.ArmControl.started += OnBeginArmControl;
+        input.Control.ArmControl.canceled += OnEndArmControl;
     }
 
     private void Update()
@@ -51,13 +49,13 @@ public class UserControll : MonoBehaviour
 
     void HandleMovement()
     {
-        var dir = input.Controll.Move.ReadValue<Vector2>();
+        var dir = input.Control.Move.ReadValue<Vector2>();
         Spot.instance.Move(dir);
     }
 
     void HandleRotate()
     {
-        var rotate = input.Controll.Rotate.ReadValue<Vector2>();
+        var rotate = input.Control.Rotate.ReadValue<Vector2>();
         if (math.abs(rotate.x) > math.abs(rotate.y))
         {
             rotate.y = 0f;
@@ -72,7 +70,7 @@ public class UserControll : MonoBehaviour
 
     void HandleGrip()
     {
-        var grip = input.Controll.Grip.ReadValue<float>();
+        var grip = input.Control.Grip.ReadValue<float>();
         grip = math.clamp(grip, 0f, 1f);
         Spot.instance.Grip(grip);
     }
@@ -87,13 +85,13 @@ public class UserControll : MonoBehaviour
         Spot.instance.PowerOn();
     }
 
-    void OnBeginArmControll(InputAction.CallbackContext context)
+    void OnBeginArmControl(InputAction.CallbackContext context)
     {
-        Spot.instance.SetArmControll(true);
+        Spot.instance.SetArmControl(true);
     }
     
-    void OnEndArmControll(InputAction.CallbackContext context)
+    void OnEndArmControl(InputAction.CallbackContext context)
     {
-        Spot.instance.SetArmControll(false);
+        Spot.instance.SetArmControl(false);
     }
 }

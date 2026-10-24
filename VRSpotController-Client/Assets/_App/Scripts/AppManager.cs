@@ -6,8 +6,8 @@ public class AppManager : MonoBehaviour
     {
         #if UNITY_EDITOR
         return true;
-        #endif
-        
+        #else
         return Debug.isDebugBuild;
+        #endif
     }
 }
