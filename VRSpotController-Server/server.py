@@ -1,15 +1,19 @@
 import socket
-from requests import *
-from responses import *
-from spot import *
+from api_requests import (
+    HelloRequest, MoveRequest, PitchRequest, StandRequest, PowerOnRequest,
+    ImageRequest, GripRequest, ArmRequest,
+)
+from responses import Response, StateResponse
 from spot.fakeSpot import FakeSpot
-from spot.spot import *
+from vector import vector3, vector4
 
 class Server:
-    spot : Spot = None
-
     def __init__(self, debug:bool=False):
-        self.spot = FakeSpot() if debug else Spot()
+        if debug:
+            self.spot = FakeSpot()
+        else:
+            from spot.spot import Spot
+            self.spot = Spot()
 
     def printHostName(self):
         try:
@@ -47,7 +51,7 @@ class Server:
 
         try:
             self.spot.StandUp() if req.stand else self.spot.SitDown()
-            resp = Response(True, "Spot now standing.")
+            resp = Response(True, "Spot now standing." if req.stand else "Spot now sitting.")
         except Exception as e:
             resp = Response(False, f"Error:{e}")
 
@@ -58,7 +62,7 @@ class Server:
 
         try:
             self.spot.PowerOn() if req.powerOn else self.spot.DropLease()
-            resp = Response(True, "Spot now powered.")
+            resp = Response(True, "Spot now powered." if req.powerOn else "Spot lease released.")
         except Exception as e:
             resp = Response(False, f"Error:{e}")
         return resp
@@ -76,9 +80,9 @@ class Server:
             state = self.spot.GetState()
             resp.state = state.__dict__
         except Exception as e:
-            print(e)
-        finally:
-            return resp
+            resp.success = False
+            resp.message = str(e)
+        return resp
         
     def setGrip(self, req:GripRequest):
         try:
@@ -91,8 +95,8 @@ class Server:
     def setArm(self, req:ArmRequest):
         try:
             self.spot.SetArm(vector3(req.posX, req.posY, req.posZ),vector4(req.rotX, req.rotY, req.rotZ, req.rotW))
-            return Response(True, f"Arm setted to location.")
+            return Response(True, "Arm set to location.")
         except Exception as e:
             print(e)
-            return Response(False, e)
+            return Response(False, str(e))
 

@@ -1,8 +1,8 @@
-from spot.spotState import *
+from spot.spotState import SpotState
 import time
 from math import sin
-from numpy import *
-from bosdyn.client.math_helpers import *
+from pathlib import Path
+from bosdyn.client.math_helpers import Vec3, Quat
 
 from enum import Enum
 
@@ -17,32 +17,31 @@ class PowerState(Enum):
     ERROR = 5
 
 class Pose(Enum):
-    UNKNOWN = 0,
-    NOT_READY = 1,
-    TRANSITION = 2,
-    STANDING = 3,
+    UNKNOWN = 0
+    NOT_READY = 1
+    TRANSITION = 2
+    STANDING = 3
     STEPPING = 4
 
 class FakeSpot():
-    debugImages = {}
-    pose : int = 0
-    power : int = 0
-    position : Vec3 = Vec3(0,0,0)
-    rotation : Quat = Quat(0,0,0,1)
-    armPosition : Vec3 = Vec3(0,0,0)
-    armRotation : Quat = Quat(0,0,0,1)
-
-    standing : int = Pose.NOT_READY.value
-    moveing : bool = False
     speed : float = 0.1
 
     def __init__(self):
-        self.loadDebugImages()
+        self.debugImages = {}
+        self.pose = Pose.NOT_READY.value
         self.power = PowerState.OFF.value
+        self.standing = Pose.NOT_READY.value
+        self.moving = False
+        self.position = Vec3(0, 0, 0)
+        self.rotation = Quat(w=1, x=0, y=0, z=0)
+        self.armPosition = Vec3(0, 0, 0)
+        self.armRotation = Quat(w=1, x=0, y=0, z=0)
+        self.gripper = 0.0
+        self.loadDebugImages()
 
     def loadDebugImage(self,name:str):
         try:
-            with open(name+".jpg", "rb") as f:
+            with (Path(__file__).resolve().parent.parent / (name + ".jpg")).open("rb") as f:
                 self.debugImages[name] = f.read()
                 print(f"Loaded debug image: {name}")
         except Exception as e:
@@ -57,14 +56,14 @@ class FakeSpot():
         self.loadDebugImage("hand_color_image")
 
     def GetImage(self, source:str):
-        img = self.debugImages[source]
+        img = self.debugImages.get(source)
         if img is None:
             print(f"No debug image for source: {source}")
             return None
         return img
     
     def GetBattery(self):
-        return (int)(sin(time.time()*0.2)*0.5+0.5*100)
+        return int((sin(time.time() * 0.2) * 0.5 + 0.5) * 100)
     
     def GetState(self) -> SpotState:
         state : SpotState = SpotState()
@@ -110,7 +109,7 @@ class FakeSpot():
             print("DropLease called but Spot is not in ON state. "+str(self.power))
 
     def UpdatePose(self):
-        if self.moveing:
+        if self.moving:
             self.pose = Pose.STEPPING.value
             return 
         self.pose = self.standing
@@ -130,14 +129,18 @@ class FakeSpot():
         time.sleep(2)
         self.standing = Pose.NOT_READY.value
 
-    def Move(self, delta:vector2, yaw:float, speed:float):
-        self.position += delta.normalized() * speed
-        self.rotation = Quat.from_euler(0,yaw * speed,0) * self.rotation
-        self.moveing = delta.Magnitude() > 0.01
+    def Move(self, delta:vector2, yaw:float):
+        self.position = Vec3(self.position.x + delta.x * self.speed,
+                             self.position.y + delta.y * self.speed, self.position.z)
+        self.rotation = Quat.from_yaw(yaw * self.speed) * self.rotation
+        self.moving = delta.Magnitude() > 0.01 or abs(yaw) > 0.01
 
     def Pitch(self, pitch:float):
-        self.rotation = Quat.from_euler(pitch,0,0) * self.rotation
+        self.rotation = Quat.from_pitch(pitch) * self.rotation
 
     def SetArm(self, pos:vector3, rot:vector4):
         self.armPosition = pos
-        self.armRotation = Quat(rot.x, rot.y, rot.z, rot.w)
+        self.armRotation = Quat(w=rot.w, x=rot.x, y=rot.y, z=rot.z)
+
+    def SetGripper(self, open:float):
+        self.gripper = max(0.0, min(open, 1.0))

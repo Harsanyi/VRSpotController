@@ -1,5 +1,5 @@
 import json
-from spot.spotState import *
+from spot.spotState import SpotState
 
 class Response:
     success : bool = True

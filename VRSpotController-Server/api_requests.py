@@ -1,4 +1,4 @@
-from vector import *
+from vector import vector2
 
 class HelloRequest:
     name : str

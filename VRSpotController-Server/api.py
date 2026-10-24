@@ -1,84 +1,75 @@
+import argparse
+import os
+
 from flask import Flask, make_response, request
-from requests import *
-from server import *
-from responses import Response
+from api_requests import (
+    HelloRequest, MoveRequest, PitchRequest, StandRequest, PowerOnRequest,
+    ImageRequest, GripRequest, ArmRequest,
+)
 from ends import END
-from spot import *
-import logging
-from flask.json.provider import DefaultJSONProvider
-from dataclasses import is_dataclass, asdict
-
-app = Flask(__name__)
-log = logging.getLogger('werkzeug')
-log.setLevel(logging.ERROR)
-
-server = Server(False)
-
-class JSONProvider(DefaultJSONProvider):
-    def default(self,obj):
-        if is_dataclass(obj):
-            return asdict(obj)
-        return super().default(obj)
-    
-app.json_provider_class = JSONProvider
-
-@app.route(END.HOME)
-async def home():
-    return 'Server is running!'
-
-@app.route(END.HELLO, methods=['POST'])
-async def hello():
-    req = HelloRequest(**request.json)
-    return server.hello(req).str()
-
-@app.route(END.MOVE, methods=['POST'])
-async def move():
-    req = MoveRequest(**request.json)
-    return server.move(req).str()
-
-@app.route(END.PITCH, methods=["POST"])
-async def pitch():
-    req = PitchRequest(**request.json)
-    return server.pitch(req).str()
-
-@app.route(END.STAND, methods=["POST"])
-async def stand():
-    req = StandRequest(**request.json)
-    return server.stand(req).str()
-
-@app.route(END.POWER, methods=["POST"])
-async def powerOn():
-    req = PowerOnRequest(**request.json)
-    return server.powerOn(req).str()
-
-@app.route(END.IMAGE, methods=["POST"])
-async def getImage():
-    req = ImageRequest(**request.json)
-    img = server.getImage(req)
-    if(img == None):
-        return Response(False,"Image not got!").str()
-    
-    resp = make_response(img)
-    resp.headers.set('Content-Type', 'image/jpeg')
-    resp.headers.set(
-        'Content-Disposition', 'attachment', filename=f'{req.source}.jpg')
-    return resp
-
-@app.route(END.STATE, methods=["POST"])
-async def getState():
-    return server.getState().str()
-
-@app.route(END.GRIP, methods=["POST"])
-async def setGrip():
-    req = GripRequest(**request.json)
-    return server.setGrip(req).str()
-
-@app.route(END.ARM, methods=["POST"])
-async def setArm():
-    req = ArmRequest(**request.json)
-    return server.setArm(req).str()
-
-server.printHostName()
-app.run(host="0.0.0.0", port=5000, debug=True)
+from responses import Response
+from server import Server
 
 
+def create_app(debug=False):
+    """Create the HTTP bridge; debug selects the hardware-free mock backend."""
+    app = Flask(__name__)
+    server = Server(debug=debug)
+
+    @app.route(END.HOME)
+    def home():
+        return 'Server is running!'
+
+    @app.route(END.HELLO, methods=['POST'])
+    def hello():
+        return server.hello(HelloRequest(**request.json)).str()
+
+    @app.route(END.MOVE, methods=['POST'])
+    def move():
+        return server.move(MoveRequest(**request.json)).str()
+
+    @app.route(END.PITCH, methods=['POST'])
+    def pitch():
+        return server.pitch(PitchRequest(**request.json)).str()
+
+    @app.route(END.STAND, methods=['POST'])
+    def stand():
+        return server.stand(StandRequest(**request.json)).str()
+
+    @app.route(END.POWER, methods=['POST'])
+    def power_on():
+        return server.powerOn(PowerOnRequest(**request.json)).str()
+
+    @app.route(END.IMAGE, methods=['POST'])
+    def get_image():
+        req = ImageRequest(**request.json)
+        img = server.getImage(req)
+        if img is None:
+            return Response(False, 'Image unavailable.').str(), 404
+        resp = make_response(img)
+        resp.headers.set('Content-Type', 'image/jpeg')
+        resp.headers.set('Content-Disposition', 'attachment', filename=f'{req.source}.jpg')
+        return resp
+
+    @app.route(END.STATE, methods=['POST'])
+    def get_state():
+        return server.getState().str()
+
+    @app.route(END.GRIP, methods=['POST'])
+    def set_grip():
+        return server.setGrip(GripRequest(**request.json)).str()
+
+    @app.route(END.ARM, methods=['POST'])
+    def set_arm():
+        return server.setArm(ArmRequest(**request.json)).str()
+
+    return app
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Unity to Spot HTTP bridge')
+    parser.add_argument('--mock', action='store_true', help='Use FakeSpot without robot hardware')
+    args = parser.parse_args()
+    app = create_app(debug=args.mock)
+    debug = os.getenv('FLASK_DEBUG', '0').lower() in ('1', 'true', 'yes')
+    app.run(host='0.0.0.0', port=5000, debug=debug, use_reloader=False)
